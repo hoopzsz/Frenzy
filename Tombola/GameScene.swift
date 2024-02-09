@@ -13,30 +13,12 @@ final class GameScene: SKScene, ObservableObject {
 
     var r: CGFloat = 0
     
-    var rotationSpeed = 1.0 {
-        didSet {
-            r
-//            tombola?.removeAllActions()
-//            tombola?.removeAllActions()
-//            let rotate = SKAction.rotate(byAngle: 1.0, duration: rotationSpeed)
-//            let repeatedRotate = SKAction.repeatForever(rotate)
-//            tombola?.run(repeatedRotate)
-//            tombola?.zRotation = rotationSpeed * 0.1
-        }
-    }
+    var rotationSpeed = 1.0
     
     var scale = 1.0 {
         didSet {
-            print("didSet scale : \(scale)")
-//            tombola?.xScale = scale
-//            tombola?.yScale = scale
-            
-            let scaleAction = SKAction.scale(to: scale, duration: 0.0)
-//            let scaleDownAction = SKAction.scale(to: 1.0, duration: 1.0)
-//            print("tombola: \(self.tombola)")
             tombola?.xScale = scale
             tombola?.yScale = scale
-            tombola?.run(scaleAction)
         }
     }
     
@@ -51,12 +33,27 @@ final class GameScene: SKScene, ObservableObject {
         SKAction.playSoundFileNamed($0, waitForCompletion: false)
     }
 
+    override init() {
+        super.init(size: .zero)
+        
+        scaleMode = .aspectFit
+        backgroundColor = .black
+        
+        physicsWorld.contactDelegate = self
+        physicsWorld.speed = 1.0
+//        physicsWorld.gravity = CGVector(dx: 0.0, dy: -0.1)
+        
+        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
+        physicsBody?.categoryBitMask = PhysicsCategory.worldBoundary.rawValue
+        physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
+    }
+    
     override init(size: CGSize) {
         super.init(size: size)
 
 //        run(playSound(""))
         scaleMode = .aspectFit
-        backgroundColor = .darkGray
+        backgroundColor = .black
         
         physicsWorld.contactDelegate = self
         physicsWorld.speed = 1.0
@@ -190,11 +187,12 @@ private extension GameScene {
     }
     
     func makeTombola() {
-        let numberOfSides = 3
+        let numberOfSides = 5
         let viewFrame = view?.frame ?? .zero
         let tombolaSize = viewFrame.size.width * 0.5
         let halfW = tombolaSize * 0.5
-        let frame = CGRect(x: viewFrame.midX - halfW, y: viewFrame.midY - halfW, width: tombolaSize, height: tombolaSize)
+        let frame = CGRect(x: viewFrame.midX - halfW, y: viewFrame.midY + halfW, width: tombolaSize, height: tombolaSize)
+//        let frame = viewFrame
         let path = CGMutablePath()
         var points = calculatePolygonCoordinates(numberOfSides)
             .map { CGPoint(x: $0.0 * tombolaSize, y: $0.1 * tombolaSize) }
@@ -209,7 +207,8 @@ private extension GameScene {
         tombola.physicsBody?.collisionBitMask = PhysicsCategory.dot.rawValue
         tombola.physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
         tombola.physicsBody?.usesPreciseCollisionDetection = true
-        tombola.position = CGPoint(x: frame.origin.x + halfW, y: frame.origin.y + halfW)
+//        tombola.position = CGPoint(x: viewFrame.origin.x + tombolaSize, y: viewFrame.origin.y + tombolaSize * 3)
+        tombola.position = CGPoint(x: view?.frame.midX ?? .zero, y: view?.frame.midY ?? .zero)
         self.tombola = tombola
 //        let rotate = SKAction.rotate(byAngle: 1, duration: 1.0)
 //        let repeatedRotate = SKAction.repeatForever(rotate)

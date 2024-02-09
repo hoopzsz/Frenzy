@@ -19,10 +19,8 @@ final class Dot: SKShapeNode {
         path.addArc(center: .zero, radius: r, startAngle: 0, endAngle: .pi * 2, clockwise: true)
         self.path = path
                         
-//        alpha = 1
-//        zPosition = 1
-        fillColor = .blue
-        strokeColor = .blue
+        fillColor = .cyan
+        strokeColor = .cyan
         
         physicsBody = SKPhysicsBody(circleOfRadius: r)
         physicsBody?.mass = 0// r * 0.1
