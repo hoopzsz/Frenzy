@@ -14,6 +14,8 @@
 		65519E062B76088B001A6494 /* TombolaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E052B76088B001A6494 /* TombolaTests.swift */; };
 		65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E0F2B76088B001A6494 /* TombolaUITests.swift */; };
 		65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */; };
+		65519E212B760906001A6494 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E202B760906001A6494 /* GameScene.swift */; };
+		65519E232B760D12001A6494 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E222B760D12001A6494 /* Dot.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +46,8 @@
 		65519E0B2B76088B001A6494 /* TombolaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TombolaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65519E0F2B76088B001A6494 /* TombolaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITests.swift; sourceTree = "<group>"; };
 		65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		65519E202B760906001A6494 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
+		65519E222B760D12001A6494 /* Dot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dot.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -96,6 +100,8 @@
 			children = (
 				65519DF42B760889001A6494 /* TombolaApp.swift */,
 				65519DF62B760889001A6494 /* ContentView.swift */,
+				65519E202B760906001A6494 /* GameScene.swift */,
+				65519E222B760D12001A6494 /* Dot.swift */,
 				65519DF82B76088A001A6494 /* Assets.xcassets */,
 				65519DFA2B76088A001A6494 /* Preview Content */,
 			);
@@ -257,8 +263,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65519E212B760906001A6494 /* GameScene.swift in Sources */,
 				65519DF72B760889001A6494 /* ContentView.swift in Sources */,
 				65519DF52B760889001A6494 /* TombolaApp.swift in Sources */,
+				65519E232B760D12001A6494 /* Dot.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
