@@ -1,0 +1,593 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		65519DF52B760889001A6494 /* TombolaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF42B760889001A6494 /* TombolaApp.swift */; };
+		65519DF72B760889001A6494 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF62B760889001A6494 /* ContentView.swift */; };
+		65519DF92B76088A001A6494 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65519DF82B76088A001A6494 /* Assets.xcassets */; };
+		65519DFC2B76088A001A6494 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65519DFB2B76088A001A6494 /* Preview Assets.xcassets */; };
+		65519E062B76088B001A6494 /* TombolaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E052B76088B001A6494 /* TombolaTests.swift */; };
+		65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E0F2B76088B001A6494 /* TombolaUITests.swift */; };
+		65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		65519E022B76088B001A6494 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65519DE92B760889001A6494 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65519DF02B760889001A6494;
+			remoteInfo = Tombola;
+		};
+		65519E0C2B76088B001A6494 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 65519DE92B760889001A6494 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 65519DF02B760889001A6494;
+			remoteInfo = Tombola;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXFileReference section */
+		65519DF12B760889001A6494 /* Tombola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tombola.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		65519DF42B760889001A6494 /* TombolaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaApp.swift; sourceTree = "<group>"; };
+		65519DF62B760889001A6494 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		65519DF82B76088A001A6494 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		65519DFB2B76088A001A6494 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		65519E012B76088B001A6494 /* TombolaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TombolaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65519E052B76088B001A6494 /* TombolaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaTests.swift; sourceTree = "<group>"; };
+		65519E0B2B76088B001A6494 /* TombolaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TombolaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65519E0F2B76088B001A6494 /* TombolaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITests.swift; sourceTree = "<group>"; };
+		65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		65519DEE2B760889001A6494 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519DFE2B76088B001A6494 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519E082B76088B001A6494 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		65519DE82B760889001A6494 = {
+			isa = PBXGroup;
+			children = (
+				65519DF32B760889001A6494 /* Tombola */,
+				65519E042B76088B001A6494 /* TombolaTests */,
+				65519E0E2B76088B001A6494 /* TombolaUITests */,
+				65519DF22B760889001A6494 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		65519DF22B760889001A6494 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				65519DF12B760889001A6494 /* Tombola.app */,
+				65519E012B76088B001A6494 /* TombolaTests.xctest */,
+				65519E0B2B76088B001A6494 /* TombolaUITests.xctest */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		65519DF32B760889001A6494 /* Tombola */ = {
+			isa = PBXGroup;
+			children = (
+				65519DF42B760889001A6494 /* TombolaApp.swift */,
+				65519DF62B760889001A6494 /* ContentView.swift */,
+				65519DF82B76088A001A6494 /* Assets.xcassets */,
+				65519DFA2B76088A001A6494 /* Preview Content */,
+			);
+			path = Tombola;
+			sourceTree = "<group>";
+		};
+		65519DFA2B76088A001A6494 /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				65519DFB2B76088A001A6494 /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		65519E042B76088B001A6494 /* TombolaTests */ = {
+			isa = PBXGroup;
+			children = (
+				65519E052B76088B001A6494 /* TombolaTests.swift */,
+			);
+			path = TombolaTests;
+			sourceTree = "<group>";
+		};
+		65519E0E2B76088B001A6494 /* TombolaUITests */ = {
+			isa = PBXGroup;
+			children = (
+				65519E0F2B76088B001A6494 /* TombolaUITests.swift */,
+				65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */,
+			);
+			path = TombolaUITests;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		65519DF02B760889001A6494 /* Tombola */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Tombola" */;
+			buildPhases = (
+				65519DED2B760889001A6494 /* Sources */,
+				65519DEE2B760889001A6494 /* Frameworks */,
+				65519DEF2B760889001A6494 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Tombola;
+			productName = Tombola;
+			productReference = 65519DF12B760889001A6494 /* Tombola.app */;
+			productType = "com.apple.product-type.application";
+		};
+		65519E002B76088B001A6494 /* TombolaTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaTests" */;
+			buildPhases = (
+				65519DFD2B76088B001A6494 /* Sources */,
+				65519DFE2B76088B001A6494 /* Frameworks */,
+				65519DFF2B76088B001A6494 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				65519E032B76088B001A6494 /* PBXTargetDependency */,
+			);
+			name = TombolaTests;
+			productName = TombolaTests;
+			productReference = 65519E012B76088B001A6494 /* TombolaTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
+		65519E0A2B76088B001A6494 /* TombolaUITests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaUITests" */;
+			buildPhases = (
+				65519E072B76088B001A6494 /* Sources */,
+				65519E082B76088B001A6494 /* Frameworks */,
+				65519E092B76088B001A6494 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				65519E0D2B76088B001A6494 /* PBXTargetDependency */,
+			);
+			name = TombolaUITests;
+			productName = TombolaUITests;
+			productReference = 65519E0B2B76088B001A6494 /* TombolaUITests.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		65519DE92B760889001A6494 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1500;
+				LastUpgradeCheck = 1500;
+				TargetAttributes = {
+					65519DF02B760889001A6494 = {
+						CreatedOnToolsVersion = 15.0;
+					};
+					65519E002B76088B001A6494 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 65519DF02B760889001A6494;
+					};
+					65519E0A2B76088B001A6494 = {
+						CreatedOnToolsVersion = 15.0;
+						TestTargetID = 65519DF02B760889001A6494;
+					};
+				};
+			};
+			buildConfigurationList = 65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Tombola" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 65519DE82B760889001A6494;
+			productRefGroup = 65519DF22B760889001A6494 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				65519DF02B760889001A6494 /* Tombola */,
+				65519E002B76088B001A6494 /* TombolaTests */,
+				65519E0A2B76088B001A6494 /* TombolaUITests */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		65519DEF2B760889001A6494 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65519DFC2B76088A001A6494 /* Preview Assets.xcassets in Resources */,
+				65519DF92B76088A001A6494 /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519DFF2B76088B001A6494 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519E092B76088B001A6494 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		65519DED2B760889001A6494 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65519DF72B760889001A6494 /* ContentView.swift in Sources */,
+				65519DF52B760889001A6494 /* TombolaApp.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519DFD2B76088B001A6494 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65519E062B76088B001A6494 /* TombolaTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		65519E072B76088B001A6494 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */,
+				65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		65519E032B76088B001A6494 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65519DF02B760889001A6494 /* Tombola */;
+			targetProxy = 65519E022B76088B001A6494 /* PBXContainerItemProxy */;
+		};
+		65519E0D2B76088B001A6494 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 65519DF02B760889001A6494 /* Tombola */;
+			targetProxy = 65519E0C2B76088B001A6494 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin XCBuildConfiguration section */
+		65519E132B76088B001A6494 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		65519E142B76088B001A6494 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		65519E162B76088B001A6494 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.Tombola;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		65519E172B76088B001A6494 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
+				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
+				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.Tombola;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		65519E192B76088B001A6494 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.TombolaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tombola.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tombola";
+			};
+			name = Debug;
+		};
+		65519E1A2B76088B001A6494 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				GENERATE_INFOPLIST_FILE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.TombolaTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tombola.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tombola";
+			};
+			name = Release;
+		};
+		65519E1C2B76088B001A6494 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.TombolaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tombola;
+			};
+			name = Debug;
+		};
+		65519E1D2B76088B001A6494 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 6W3D273VP2;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.TombolaUITests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = Tombola;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Tombola" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65519E132B76088B001A6494 /* Debug */,
+				65519E142B76088B001A6494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Tombola" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65519E162B76088B001A6494 /* Debug */,
+				65519E172B76088B001A6494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65519E192B76088B001A6494 /* Debug */,
+				65519E1A2B76088B001A6494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaUITests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				65519E1C2B76088B001A6494 /* Debug */,
+				65519E1D2B76088B001A6494 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 65519DE92B760889001A6494 /* Project object */;
+}
