@@ -5,6 +5,7 @@
 //  Created by Daniel Hooper on 2024-02-09.
 //
 
+import MIDIKitIO
 import SwiftUI
 
 @main

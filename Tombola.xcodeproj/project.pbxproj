@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		653B75542B76B86D00247C3E /* PianoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B75532B76B86D00247C3E /* PianoView.swift */; };
 		65519DF52B760889001A6494 /* TombolaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF42B760889001A6494 /* TombolaApp.swift */; };
 		65519DF72B760889001A6494 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF62B760889001A6494 /* ContentView.swift */; };
 		65519DF92B76088A001A6494 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65519DF82B76088A001A6494 /* Assets.xcassets */; };
@@ -16,6 +17,12 @@
 		65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */; };
 		65519E212B760906001A6494 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E202B760906001A6494 /* GameScene.swift */; };
 		65519E232B760D12001A6494 /* Dot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E222B760D12001A6494 /* Dot.swift */; };
+		65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */; };
+		65FBFB132B76D84500E72FBA /* MIDIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB122B76D84500E72FBA /* MIDIKit */; };
+		65FBFB152B76D84500E72FBA /* MIDIKitControlSurfaces in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB142B76D84500E72FBA /* MIDIKitControlSurfaces */; };
+		65FBFB172B76D84500E72FBA /* MIDIKitCore in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB162B76D84500E72FBA /* MIDIKitCore */; };
+		65FBFB192B76D84500E72FBA /* MIDIKitIO in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB182B76D84500E72FBA /* MIDIKitIO */; };
+		65FBFB1B2B76D84500E72FBA /* MIDIKitSMF in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB1A2B76D84500E72FBA /* MIDIKitSMF */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		653B75532B76B86D00247C3E /* PianoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoView.swift; sourceTree = "<group>"; };
 		65519DF12B760889001A6494 /* Tombola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tombola.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		65519DF42B760889001A6494 /* TombolaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaApp.swift; sourceTree = "<group>"; };
 		65519DF62B760889001A6494 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -48,6 +56,7 @@
 		65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		65519E202B760906001A6494 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		65519E222B760D12001A6494 /* Dot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Dot.swift; sourceTree = "<group>"; };
+		65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -55,6 +64,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65FBFB1B2B76D84500E72FBA /* MIDIKitSMF in Frameworks */,
+				65FBFB192B76D84500E72FBA /* MIDIKitIO in Frameworks */,
+				65FBFB172B76D84500E72FBA /* MIDIKitCore in Frameworks */,
+				65FBFB152B76D84500E72FBA /* MIDIKitControlSurfaces in Frameworks */,
+				65FBFB132B76D84500E72FBA /* MIDIKit in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -100,7 +114,9 @@
 			children = (
 				65519DF42B760889001A6494 /* TombolaApp.swift */,
 				65519DF62B760889001A6494 /* ContentView.swift */,
+				653B75532B76B86D00247C3E /* PianoView.swift */,
 				65519E202B760906001A6494 /* GameScene.swift */,
+				65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */,
 				65519E222B760D12001A6494 /* Dot.swift */,
 				65519DF82B76088A001A6494 /* Assets.xcassets */,
 				65519DFA2B76088A001A6494 /* Preview Content */,
@@ -149,6 +165,13 @@
 			dependencies = (
 			);
 			name = Tombola;
+			packageProductDependencies = (
+				65FBFB122B76D84500E72FBA /* MIDIKit */,
+				65FBFB142B76D84500E72FBA /* MIDIKitControlSurfaces */,
+				65FBFB162B76D84500E72FBA /* MIDIKitCore */,
+				65FBFB182B76D84500E72FBA /* MIDIKitIO */,
+				65FBFB1A2B76D84500E72FBA /* MIDIKitSMF */,
+			);
 			productName = Tombola;
 			productReference = 65519DF12B760889001A6494 /* Tombola.app */;
 			productType = "com.apple.product-type.application";
@@ -221,6 +244,9 @@
 				Base,
 			);
 			mainGroup = 65519DE82B760889001A6494;
+			packageReferences = (
+				65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */,
+			);
 			productRefGroup = 65519DF22B760889001A6494 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -263,10 +289,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */,
 				65519E212B760906001A6494 /* GameScene.swift in Sources */,
 				65519DF72B760889001A6494 /* ContentView.swift in Sources */,
 				65519DF52B760889001A6494 /* TombolaApp.swift in Sources */,
 				65519E232B760D12001A6494 /* Dot.swift in Sources */,
+				653B75542B76B86D00247C3E /* PianoView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -596,6 +624,45 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/orchetect/MIDIKit";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.5;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		65FBFB122B76D84500E72FBA /* MIDIKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */;
+			productName = MIDIKit;
+		};
+		65FBFB142B76D84500E72FBA /* MIDIKitControlSurfaces */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */;
+			productName = MIDIKitControlSurfaces;
+		};
+		65FBFB162B76D84500E72FBA /* MIDIKitCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */;
+			productName = MIDIKitCore;
+		};
+		65FBFB182B76D84500E72FBA /* MIDIKitIO */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */;
+			productName = MIDIKitIO;
+		};
+		65FBFB1A2B76D84500E72FBA /* MIDIKitSMF */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 65FBFB112B76D84500E72FBA /* XCRemoteSwiftPackageReference "MIDIKit" */;
+			productName = MIDIKitSMF;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 65519DE92B760889001A6494 /* Project object */;
 }

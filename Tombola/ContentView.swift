@@ -11,39 +11,45 @@ import SpriteKit
 struct ContentView: View {
     
     @StateObject var gameScene = GameScene()
-    
+
     var body: some View {
-        VStack {
+        DynamicStack {
             GeometryReader { geometry in
                 self.updateSize(geometry.size)
                 SpriteView(scene: gameScene,
-                           debugOptions: [.showsFPS,
-                                          .showsDrawCount,
-                                          .showsNodeCount,
-                                          .showsQuadCount])
-                .ignoresSafeArea()
+                           debugOptions: [
+//                            .showsFPS,
+//                                          .showsDrawCount,
+//                                          .showsNodeCount,
+                                          .showsPhysics,
+//                                          .showsQuadCount])
+                                          ])
             }
-            Spacer()
-            Slider(value: $gameScene.scale,
-                   in: 0.0...1.0,
-                   step: 0.01,
-                   onEditingChanged: { onEditingChanged in
-//                    print(onEditingChanged)
-            })
+            VStack {
+                Slider(value: $gameScene.scale,
+                       in: 0.0...2.0,
+                       step: 0.01,
+                       onEditingChanged: { onEditingChanged in
+                    //                    print(onEditingChanged)
+                })
+                Slider(value: $gameScene.rotationSpeed,
+                       in: 0.0...3.0,
+                       step: 0.01,
+                       onEditingChanged: { onEditingChanged in
+                    //                    print(onEditingChanged)
+                })
+                Slider(value: $gameScene.numberOfSides,
+                       in: 4.0...13.0,
+                       step: 1,
+                       onEditingChanged: { onEditingChanged in
+                    //                    print(onEditingChanged)
+                })
+                PianoView(startingKey: 36, numberOfKeys: 12, selectedKeys: $gameScene.notes)
+                    .padding(4.0)
+                    .aspectRatio(2.5, contentMode: .fit)
+            }
             .padding()
-            Slider(value: $gameScene.rotationSpeed,
-                   in: 0.0...5.0,
-                   step: 0.1,
-                   onEditingChanged: { onEditingChanged in
-//                    print(onEditingChanged)
-            })
-            .padding()
-            Spacer()
-            Text("Keyboard goes here")
-                .foregroundStyle(Color.white)
-                .padding()
         }
-        .padding()
         .background(Color.black.ignoresSafeArea())
     }
     
@@ -53,26 +59,45 @@ struct ContentView: View {
     }
 }
 
-struct GameSceneView: View {
+#Preview {
+    ContentView()
+}
 
-    @StateObject var gameScene: GameScene
+struct DynamicStack<Content: View>: View {
+    
+    @ViewBuilder var content: () -> Content
+    @Environment(\.horizontalSizeClass) private var sizeClass
+    
+    var horizontalAlignment = HorizontalAlignment.center
+    var verticalAlignment = VerticalAlignment.center
+    var spacing: CGFloat?
 
     var body: some View {
-        VStack {
-            GeometryReader { geometry in
-//                SpriteView(scene: GameScene(size: geometry.size),
-                SpriteView(scene: gameScene,
-                           debugOptions: [.showsFPS,
-                                          .showsDrawCount,
-                                          .showsNodeCount,
-                                          .showsQuadCount])
-                .ignoresSafeArea()
-            }
-            .border(Color.red, width: 2.0)
+        switch sizeClass {
+        case .regular:
+            hStack
+        case .compact, .none:
+            vStack
+        @unknown default:
+            vStack
         }
     }
 }
 
-#Preview {
-    ContentView()
+private extension DynamicStack {
+    var hStack: some View {
+        HStack(
+            alignment: verticalAlignment,
+            spacing: spacing,
+            content: content
+        )
+    }
+
+    var vStack: some View {
+        VStack(
+            alignment: horizontalAlignment,
+            spacing: spacing,
+            content: content
+        )
+    }
 }
