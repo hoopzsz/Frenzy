@@ -33,7 +33,7 @@ struct ContentView: View {
                     //                    print(onEditingChanged)
                 })
                 Slider(value: $gameScene.rotationSpeed,
-                       in: 0.0...3.0,
+                       in: 0.0...4.0,
                        step: 0.01,
                        onEditingChanged: { onEditingChanged in
                     //                    print(onEditingChanged)
@@ -41,6 +41,13 @@ struct ContentView: View {
                 Slider(value: $gameScene.numberOfSides,
                        in: 4.0...13.0,
                        step: 1,
+                       onEditingChanged: { onEditingChanged in
+                    //                    print(onEditingChanged)
+                })
+                
+                Slider(value: $gameScene.segmentOffset,
+                       in: 0.0...180.0,
+                       step: 1.0,
                        onEditingChanged: { onEditingChanged in
                     //                    print(onEditingChanged)
                 })
