@@ -7,45 +7,112 @@
 
 import SwiftUI
 
+struct PianoKeyPreferenceData: Equatable {
+    let index: Int
+    let bounds: CGRect
+}
+
+struct PianoKeyPreferenceKey: PreferenceKey {
+    typealias Value = [PianoKeyPreferenceData]
+    
+    static var defaultValue: [PianoKeyPreferenceData] = []
+    
+    static func reduce(value: inout [PianoKeyPreferenceData], nextValue: () -> [PianoKeyPreferenceData]) {
+        value.append(contentsOf: nextValue())
+    }
+}
+//
+//struct PianoKeyView: View {
+//    
+//    //    @GestureState private var isPressed: Bool = false
+//    @State private var innerStrokeDistance = 4.0
+//    @State var isPressed: Bool
+//    let color: Color
+//    let cornerRadius: CGFloat
+//
+//    var body: some View {
+////        let dragGesture = DragGesture(minimumDistance: 0)
+////            .updating($isPressed) { value, state, _ in
+////                state = true
+////            }
+//        
+//        let gesture = DragGesture(minimumDistance: 0)
+//            .onChanged { value in
+//                isPressed = true
+//                innerStrokeDistance = 8.0
+//            }
+//            .onEnded { _ in
+//                isPressed = false
+//                innerStrokeDistance = 4.0
+//            }
+//        
+//        RoundedRectangle(cornerSize: .init(width: cornerRadius, height: cornerRadius))
+//            .strokeBorder(color, lineWidth: 1.0)
+//            .background(isPressed ? color.opacity(1.0) : .black)
+//            .clipShape(RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius)))
+//            .overlay(
+////                RoundedRectangle(cornerRadius: cornerRadius - (innerStrokeDistance / 2.0))
+//                RoundedRectangle(cornerRadius: cornerRadius - 4.0)
+//                    .strokeBorder(isPressed ? .white : color, lineWidth: isPressed ? 1.0 : 0.5)
+//                    .padding(innerStrokeDistance)
+//            )
+////            .simultaneousGesture(gesture)
+//            .zIndex(isPressed ? 1000 : 10)
+//            .scaleEffect(.init(width: 1.0, height: isPressed ? 0.98 : 1.0), anchor: .top)
+//            .animation(.easeInOut(duration: 0.11), value: isPressed)
+//            .padding(1.0)
+//    }
+//}
+
+
 struct PianoKeyView: View {
     
-    @State var keyColor: Color
-    let selectionColor = Color.blue
-    let isSelected: Bool
-    let cornerRadius: CGFloat
-    private let originalKeyColor: Color
+    @State private var innerStrokeDistance = 4.0
+    @State private var backgroundColor = Color.black
+    @State private var innerBorderColor = Color.white
     
-    init(keyColor: Color, isSelected: Bool, cornerRadius: CGFloat) {
-        self.keyColor = keyColor
-        self.isSelected = isSelected
-        self.cornerRadius = cornerRadius
-        self.originalKeyColor = keyColor
-    }
+    @Binding var isPressed: Bool
+    let color: Color
+    let cornerRadius: CGFloat
 
     var body: some View {
-        RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius))
-            .stroke(.black)
-            .background(keyColor)
+        RoundedRectangle(cornerSize: .init(width: cornerRadius, height: cornerRadius))
+            .strokeBorder(color, lineWidth: 1.0)
+            .background(backgroundColor)
             .clipShape(RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius)))
-            .onChange(of: isSelected, initial: true, {
-                withAnimation {
-                    keyColor = isSelected ? selectionColor : originalKeyColor
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius - 4.0)
+                    .strokeBorder(isPressed ? .white : color, lineWidth: isPressed ? 1.0 : 0.5)
+                    .padding(innerStrokeDistance)
+            )
+            .zIndex(isPressed ? 1000 : 10)
+            .padding(1.0)
+            .onChange(of: isPressed, initial: false) {
+                withAnimation(.easeInOut(duration: 0.07)) {
+                    backgroundColor = isPressed ? color : .black
                 }
-            })
-            .animation(.easeInOut(duration: 0.07), value: keyColor)
+            }
+//            .onAppear {
+//                backgroundColor = color
+//            }
+//            .animation(.easeInOut(duration: 0.07), value: isPressed)
     }
 }
 
 struct PianoView: View {
-            
-//    @State private var keyData: [CardPreferenceData] = []
-    @Binding var selectedKeys: Set<Int>
+    
+    @State private var keyData: [PianoKeyPreferenceData] = []
+//    @Binding var selectedKeys: Set<Int>
+    @State var selectedKeys2: Set<Int> = []
+    @State var lastSelectedKey: Int = -1
 
+    @Binding var keyPress: Int?
+    
     let startingKey: Int
     let numberOfKeys: Int
     
-    let blackKeyWidthRatio = 0.6
-    let blackKeyHeightRatio = 0.5
+    let blackKeyWidthRatio = 0.65
+    let blackKeyHeightRatio = 0.6
     
     private let blackKeyNumbers = [1, 3, 6, 8, 10]
     
@@ -55,12 +122,13 @@ struct PianoView: View {
 //        self.numberOfKeys = numberOfKeys
 ////        self.selectedKeys = selectedKeys
 //    }
-    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Binding<Set<Int>>) {
-        assert(!blackKeyNumbers.contains(startingKey % 12), "Starting key cannot be black")
-        self.startingKey = startingKey
-        self.numberOfKeys = numberOfKeys
-        self._selectedKeys = selectedKeys
-    }
+//    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Binding<Set<Int>>) {
+//    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Set<Int>) {
+//        assert(!blackKeyNumbers.contains(startingKey % 12), "Starting key cannot be black")
+//        self.startingKey = startingKey
+//        self.numberOfKeys = numberOfKeys
+//        self.selectedKeys = selectedKeys
+//    }
          
     var body: some View {
         ZStack {
@@ -74,77 +142,71 @@ struct PianoView: View {
                 
                 ZStack {
                     HStack(spacing: 0.0) {
-                        ForEach(startingKey..<numberOfKeys+startingKey, id: \.self) { index in
+                        ForEach(startingKey..<startingKey + numberOfKeys, id: \.self) { index in
                             let keyNumber = index % 12
                             if !blackKeyNumbers.contains(keyNumber) {
-                                ZStack {
-                                    PianoKeyView(keyColor: Color.white, isSelected: selectedKeys.contains(index), cornerRadius: 5.0)
+                                PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
+                                             color: Color.orange,
+                                             cornerRadius: 8.0)
                                         .background(
                                             GeometryReader { geometry in
                                                 Rectangle()
                                                     .fill(Color.clear)
-//                                                    .preference(key: CardPreferenceKey.self,
-//                                                                value: [CardPreferenceData(index: index, bounds: geometry.frame(in: .named("GameSpace")))])
+                                                    .preference(key: PianoKeyPreferenceKey.self,
+                                                                value: [PianoKeyPreferenceData(index: index, bounds: geometry.frame(in: .named("PianoSpace")))])
                                             }
                                         )
-                                        .onTapGesture {
-                                            $selectedKeys.wrappedValue.insert(index)
-//                                            print($selectedKeys.wrappedValue)
-                                        }
-                                }
+//                                        .simultaneousGesture(TapGesture().onEnded { selectedKeys.toggle(index) })
                             }
                         }
                     }
                 
-                    ForEach(startingKey..<(startingKey + numberOfKeys), id: \.self) { index in
+                    ForEach(startingKey..<startingKey + numberOfKeys, id: \.self) { index in
                         let keyNumber = index % 12
                         let isBlackKey = blackKeyNumbers.contains(keyNumber)
                         if isBlackKey {
-                            ZStack {
-                                PianoKeyView(keyColor: Color.black, isSelected: selectedKeys.contains(index), cornerRadius: 5.0)
-                            }
+                            PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
+                                         color: Color.gray,
+                                         cornerRadius: 8.0)
                             .background(
                                 GeometryReader { geometry in
                                     Rectangle()
                                         .fill(Color.clear)
-//                                    [CardPreferenceData(index: index, bounds: CGRect(x: blackKeyXValue(at: index, whiteKeyWidth: whiteKeyWidth), y: blackKeyHeight * 0.5, width: blackKeyWidth, height: blackKeyHeight))]
-//                                        .preference(key: CardPreferenceKey.self,
-//                                                    value: [CardPreferenceData(index: index, bounds: geometry.frame(in: .named("GameSpace")))])
+                                        .preference(key: PianoKeyPreferenceKey.self,
+                                                    value: [PianoKeyPreferenceData(index: index, bounds: geometry.frame(in: .named("PianoSpace")))])
                                 }
                             )
                             .frame(width: blackKeyWidth, height: blackKeyHeight)
                             .position(x: blackKeyXValue(at: index, whiteKeyWidth: whiteKeyWidth),
                                       y: blackKeyHeight * 0.5)
-
-                            .onTapGesture {
-//                                $selectedKeys.wrappedValue.toggle(index)
-                                $selectedKeys.wrappedValue.insert(index)
-//                                print($selectedKeys.wrappedValue)
-                            }
                         }
                     }
                 }
             }
         }
-//        .onPreferenceChange(CardPreferenceKey.self) { value in
-//            keyData = value
-//        }
-        .gesture(
-            DragGesture()
+        .onPreferenceChange(PianoKeyPreferenceKey.self) { value in
+            keyData = value
+        }
+        .simultaneousGesture(
+            DragGesture(minimumDistance: 0)
                 .onEnded { _ in
-                    selectedKeys = []
-//                    midiHelper.sendNoteOff(UInt7(lastSelectedIndex))
+//                    selectedKeys = []
+                    keyPress = nil
+                    lastSelectedKey = -1
                 }
                 .onChanged { drag in
-//                    if let data = keyData.first(where: { $0.bounds.contains(drag.location) }) {
-//                        guard selectedKeys != [data.index] else { return }
+//                    let matchingKeyData = keyData.filter { $0.bounds.contains(drag.location) }
+//                    print("⚠️ matchingKeyData.count: \(matchingKeyData.count)")
+                    if let data = keyData.reversed().first(where: { $0.bounds.contains(drag.location) }) {
+                        guard data.index != lastSelectedKey else { return }
 //                        selectedKeys = [data.index]
-//                        lastSelectedIndex = data.index
-//                        midiHelper.sendNoteOn(UInt7(data.index))
-//                    } else {
-//                        midiHelper.sendNoteOff(UInt7(demoValue + 36))
+                        keyPress = data.index
+                        lastSelectedKey = data.index
+                    } else {
 //                        selectedKeys = []
-//                    }
+                        keyPress = nil
+                        lastSelectedKey = -1
+                    }
                 }
         )
         .coordinateSpace(name: "PianoSpace")
@@ -184,5 +246,19 @@ struct PianoView: View {
 }
 
 #Preview {
-    PianoView(startingKey: 36, numberOfKeys: 12, selectedKeys: .constant([]))
+    PianoView(keyPress: .constant(nil), startingKey: 36, numberOfKeys: 12)
+//    BasicPianoView(selectedKeys: .constant([]))
+//        .background(Color.black.ignoresSafeArea())
+}
+
+extension Set {
+    
+    /// Adds an element to the Set if ithe Set does not already have it. Otherwise removes the value from the Set.
+    mutating func toggle(_ element: Set.Element) {
+        if contains(element) {
+            remove(element)
+        } else {
+            insert(element)
+        }
+    }
 }

@@ -10,9 +10,18 @@ import SwiftUI
 
 @main
 struct TombolaApp: App {
+    
+    @State var tintColor: Color = .orange
+    
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .tint(tintColor)
         }
     }
+}
+
+#Preview {
+    ContentView()
+        .tint(.orange)
 }
