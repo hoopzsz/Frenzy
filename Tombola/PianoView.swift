@@ -21,54 +21,12 @@ struct PianoKeyPreferenceKey: PreferenceKey {
         value.append(contentsOf: nextValue())
     }
 }
-//
-//struct PianoKeyView: View {
-//    
-//    //    @GestureState private var isPressed: Bool = false
-//    @State private var innerStrokeDistance = 4.0
-//    @State var isPressed: Bool
-//    let color: Color
-//    let cornerRadius: CGFloat
-//
-//    var body: some View {
-////        let dragGesture = DragGesture(minimumDistance: 0)
-////            .updating($isPressed) { value, state, _ in
-////                state = true
-////            }
-//        
-//        let gesture = DragGesture(minimumDistance: 0)
-//            .onChanged { value in
-//                isPressed = true
-//                innerStrokeDistance = 8.0
-//            }
-//            .onEnded { _ in
-//                isPressed = false
-//                innerStrokeDistance = 4.0
-//            }
-//        
-//        RoundedRectangle(cornerSize: .init(width: cornerRadius, height: cornerRadius))
-//            .strokeBorder(color, lineWidth: 1.0)
-//            .background(isPressed ? color.opacity(1.0) : .black)
-//            .clipShape(RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius)))
-//            .overlay(
-////                RoundedRectangle(cornerRadius: cornerRadius - (innerStrokeDistance / 2.0))
-//                RoundedRectangle(cornerRadius: cornerRadius - 4.0)
-//                    .strokeBorder(isPressed ? .white : color, lineWidth: isPressed ? 1.0 : 0.5)
-//                    .padding(innerStrokeDistance)
-//            )
-////            .simultaneousGesture(gesture)
-//            .zIndex(isPressed ? 1000 : 10)
-//            .scaleEffect(.init(width: 1.0, height: isPressed ? 0.98 : 1.0), anchor: .top)
-//            .animation(.easeInOut(duration: 0.11), value: isPressed)
-//            .padding(1.0)
-//    }
-//}
-
 
 struct PianoKeyView: View {
     
     @State private var innerStrokeDistance = 4.0
     @State private var backgroundColor = Color.black
+    @State private var scale = 1.0
     @State private var innerBorderColor = Color.white
     
     @Binding var isPressed: Bool
@@ -87,22 +45,19 @@ struct PianoKeyView: View {
             )
             .zIndex(isPressed ? 1000 : 10)
             .padding(1.0)
+            .scaleEffect(CGSize(width: 1.0, height: scale))
             .onChange(of: isPressed, initial: false) {
                 withAnimation(.easeInOut(duration: 0.07)) {
                     backgroundColor = isPressed ? color : .black
+                    scale = isPressed ? 0.98 : 1.0
                 }
             }
-//            .onAppear {
-//                backgroundColor = color
-//            }
-//            .animation(.easeInOut(duration: 0.07), value: isPressed)
     }
 }
 
 struct PianoView: View {
     
     @State private var keyData: [PianoKeyPreferenceData] = []
-//    @Binding var selectedKeys: Set<Int>
     @State var selectedKeys2: Set<Int> = []
     @State var lastSelectedKey: Int = -1
 
@@ -166,7 +121,7 @@ struct PianoView: View {
                         let isBlackKey = blackKeyNumbers.contains(keyNumber)
                         if isBlackKey {
                             PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
-                                         color: Color.gray,
+                                         color: Color.yellow,
                                          cornerRadius: 8.0)
                             .background(
                                 GeometryReader { geometry in
@@ -190,20 +145,17 @@ struct PianoView: View {
         .simultaneousGesture(
             DragGesture(minimumDistance: 0)
                 .onEnded { _ in
-//                    selectedKeys = []
                     keyPress = nil
                     lastSelectedKey = -1
                 }
                 .onChanged { drag in
-//                    let matchingKeyData = keyData.filter { $0.bounds.contains(drag.location) }
-//                    print("⚠️ matchingKeyData.count: \(matchingKeyData.count)")
+                    // Reversing the array allows the overlapping view, in this case black keys, to be highlighted
                     if let data = keyData.reversed().first(where: { $0.bounds.contains(drag.location) }) {
+                        // Prevent the gamescene from being spammed by the same key during dragging
                         guard data.index != lastSelectedKey else { return }
-//                        selectedKeys = [data.index]
                         keyPress = data.index
                         lastSelectedKey = data.index
                     } else {
-//                        selectedKeys = []
                         keyPress = nil
                         lastSelectedKey = -1
                     }
@@ -238,7 +190,6 @@ struct PianoView: View {
         let startingOctave = startingKey / 12
         let octave = (index / 12) - startingOctave
         let octaveOffset = CGFloat(octave) * 7.0 * whiteKeyWidth
-//        let modulo = startingKey % 2 == 0 ? 4 : 5
         let startingKeyOffset = CGFloat(numberOfBlackKeysSkipped % 5) * whiteKeyWidth
         
         return xOffset + octaveOffset - startingKeyOffset
@@ -247,8 +198,6 @@ struct PianoView: View {
 
 #Preview {
     PianoView(keyPress: .constant(nil), startingKey: 36, numberOfKeys: 12)
-//    BasicPianoView(selectedKeys: .constant([]))
-//        .background(Color.black.ignoresSafeArea())
 }
 
 extension Set {

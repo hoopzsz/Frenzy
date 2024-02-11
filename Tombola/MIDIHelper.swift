@@ -29,6 +29,10 @@ final class MIDIHelper: ObservableObject {
         setupConnections()
     }
     
+//    @Published var noteOnNumber: UInt7? = nil
+    
+    var didReceiveMIDIEvent: (MIDIEvent) -> Void = { _ in }
+    
     // MARK: - Connections
     
     static let inputConnectionName = "TestApp Input Connection"
@@ -42,15 +46,27 @@ final class MIDIHelper: ObservableObject {
             // on the iOS device once a user has clicked 'Enable' in Audio MIDI Setup on the Mac
             // to establish the USB audio/MIDI connection to the iOS device.
 //            
-//            print("Creating MIDI input connection.")
-//            try midiManager.addInputConnection(
-//                to: .outputs(matching: [.name("IDAM MIDI Host")]),
-//                tag: Self.inputConnectionName,
+            print("Creating MIDI input connection.")
+            try midiManager.addInputConnection(
+                to: .outputs(matching: [.name("IDAM MIDI Host")]),
+                tag: Self.inputConnectionName,
+                receiver: .events(options: [.bundleRPNAndNRPNDataEntryLSB, .filterActiveSensingAndClock], { [weak self] events, timestamp, outputEndpoint in
+                    if let event = events.first {
+                        self?.didReceiveMIDIEvent(event)
+//                        print("⚠️ received event: \(event)")
+//                        switch event {
+//                        case .noteOn(let noteOnData):
+//                            self.noteOnNumber = noteOnData.note.number
+//                        default:
+//                            break
+//                        }
+                    }
+                })
 //                receiver: .eventsLogging(options: [
 //                    .bundleRPNAndNRPNDataEntryLSB,
 //                    .filterActiveSensingAndClock
 //                ])
-//            )
+            )
             
             print("Creating MIDI output connection.")
 //            try midiManager.addOutputConnection(

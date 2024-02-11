@@ -5,6 +5,7 @@
 //  Created by Daniel Hooper on 2024-02-09.
 //
 
+import MIDIKitIO
 import SwiftUI
 import SpriteKit
 
@@ -32,8 +33,29 @@ struct SliderView: View {
 struct ContentView: View {
     
     @StateObject var gameScene = GameScene()
+    
     @State var isInternalSoundEnabled: Bool = true
-
+    
+    @State var presentSettings: Bool = false
+    
+//     private var midiManager = ObservableMIDIManager(
+//        clientName: "TestAppMIDIManager",
+//        model: "TestApp",
+//        manufacturer: "MyCompany"
+//    )
+    
+    @ObservedObject private var midiHelper = MIDIHelper()
+    
+    private let gravitySliderRange: ClosedRange<CGFloat> = 0.0...6.0
+    private let massSliderRange: ClosedRange<CGFloat> = 0.0...100.0
+    private let scaleSliderRange: ClosedRange<CGFloat> = 0.2...2.0
+    private let torqueSliderRange: ClosedRange<CGFloat> = 0.0...10.0
+    private let spreadSliderRange: ClosedRange<CGFloat> = 0.0...180.0
+    private let verticesSliderRange: ClosedRange<CGFloat> = 2.0...13.0
+    
+    private let smallSliderStep = 0.01
+    private let normalSliderStep = 1.0
+    
     var body: some View {
         NavigationStack {
             DynamicStack {
@@ -41,26 +63,24 @@ struct ContentView: View {
                     self.updateSize(geometry.size)
                     SpriteView(scene: gameScene,
                                debugOptions: [ ])
-//                    .border(Color.red, width: 1.0)
                 }
                 VStack {
                     HStack {
-                        SliderView(value: $gameScene.gravity, name: "Gravity", range: 0.0...6.0, step: 0.01)
-                        SliderView(value: $gameScene.mass, name: "Mass", range: 1.0...100.0, step: 1.0)
+                        SliderView(value: $gameScene.gravity, name: "Gravity", range: gravitySliderRange, step: smallSliderStep)
+                        SliderView(value: $gameScene.mass, name: "Mass", range: massSliderRange, step: normalSliderStep)
                     }
                     HStack {
-                        SliderView(value: $gameScene.scale, name: "Scale", range: 0.2...2.0, step: 0.01)
-                        SliderView(value: $gameScene.rotationSpeed, name: "Torque", range: 0.0...10.0, step: 0.01)
+                        SliderView(value: $gameScene.scale, name: "Scale", range: scaleSliderRange, step: smallSliderStep)
+                        SliderView(value: $gameScene.rotationSpeed, name: "Torque", range: torqueSliderRange, step: smallSliderStep)
                     }
                     HStack {
-                        SliderView(value: $gameScene.segmentOffset, name: "Spread", range: 0.0...180.0, step: 1.0)
-                        SliderView(value: $gameScene.numberOfSides, name: "Vertices", range: 2.0...13.0, step: 1.0)
+                        SliderView(value: $gameScene.segmentOffset, name: "Spread", range: spreadSliderRange, step: normalSliderStep)
+                        SliderView(value: $gameScene.numberOfSides, name: "Vertices", range: verticesSliderRange, step: normalSliderStep)
                     }
                     PianoView(keyPress: $gameScene.keyPress, startingKey: 36, numberOfKeys: 12)
                         .padding(4.0)
-                        .aspectRatio(2, contentMode: .fit)
+                        .aspectRatio(2.25, contentMode: .fit)
                 }
-//                .border(Color.red, width: 1.0)
                 .padding(8.0)
             }
             .background(Color.black.ignoresSafeArea())
@@ -78,19 +98,26 @@ struct ContentView: View {
             .toolbar {
                 ToolbarItemGroup(placement: .topBarTrailing) {
                     HStack {
-//                        Button("Accelerometer",
-//                               systemImage: $gameScene.wrappedValue.isMotionEnabled ? "m.square" : "m.square.fill") {
-//                            gameScene.isMotionEnabled = !gameScene.isMotionEnabled
-//                        }
-                        Toggle(isOn: $gameScene.isMotionEnabled) {
-                            Image(systemName: gameScene.isMotionEnabled ? "m.square" : "m.square.fill")
+                        //                        Toggle(isOn: $gameScene.isMotionEnabled) {
+                        //                            Image(systemName: gameScene.isMotionEnabled ? "m.square" : "m.square.fill")
+                        //                        }
+                        //                        Toggle(isOn: $isInternalSoundEnabled) {
+                        //                            Image(systemName: isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle")
+                        //                        }
+                        //                        Toggle(isOn: $presentSettings) {
+                        //                            Image(systemName: "gearshape.fill")
+                        //                        }
+                        Button("Accelerometer",
+                               systemImage: gameScene.isMotionEnabled ? "m.square.fill" : "m.square") {
+                            gameScene.isMotionEnabled.toggle()
                         }
                         Button("Audio", systemImage: isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle") {
-//                            isInternalSoundEnabled.toggle()
+                            isInternalSoundEnabled.toggle()
                         }
                         Button("Settings", systemImage: "gearshape.fill") {
 
                         }
+                        
                     }
                 }
             }
@@ -99,6 +126,7 @@ struct ContentView: View {
         .onShake {
             gameScene.didShake.toggle()
         }
+        
     }
 
     

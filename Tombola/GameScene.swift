@@ -22,19 +22,11 @@ final class GameScene: SKScene, ObservableObject {
     var didShake = false {
         didSet {
             print("⚠️ Shake detected: \(didShake)")
-
-//            if didShake {
-//                tombolaSegments.forEach {
             makeTombolaSegments(affectedByGravity: true)
-
-//                    $0.physicsBody?.affectedByGravity = true
-//                    $0.physicsBody?.pinned = false
-//                }
-//            }
         }
     }
     
-    var gravity: CGFloat = 1.0 {
+    @Published var gravity: CGFloat = 4.0 {
         didSet {
             setGravity(gravity)
         }
@@ -45,7 +37,7 @@ final class GameScene: SKScene, ObservableObject {
         physicsWorld.gravity = CGVector(dx: 0.0, dy: normalizedGravity)
     }
     
-    var isMotionEnabled: Bool = false {
+    @Published var isMotionEnabled: Bool = false {
         didSet {
             print("⚠️ isMotionEnabled didSet: \(isMotionEnabled)")
             if isMotionEnabled {
@@ -56,8 +48,12 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    var mass: CGFloat = 1.0 {
+    @Published var mass: CGFloat = 1.0 {
         didSet {
+            noteDots.forEach {
+                $0.physicsBody?.mass = mass
+            }
+//            physicsBody
             // Update dot body masses
         }
     }
@@ -70,26 +66,17 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-//    var notes: Set<Int> = [] {
-//        didSet {
-//            print("notes set in gamescene: \(notes)")
-//            if !notes.isEmpty {
-//                makeNoteDot(notes.removeFirst())
-//            }
-//        }
-//    }
-    
     var r: CGFloat = 0
     
-    var rotationSpeed: CGFloat = 4.0
+    @Published var rotationSpeed: CGFloat = 4.0
     
-    var segmentOffset: CGFloat = 0.0 {
+    @Published  var segmentOffset: CGFloat = 0.0 {
         didSet {
             makeTombolaSegments() // we have to redraw new points
         }
     }
 
-    var scale: CGFloat = 1.5 {
+    @Published var scale: CGFloat = 1.5 {
         didSet {
             tombolaSegments.forEach {
                 $0.xScale = scale
@@ -98,7 +85,7 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    var numberOfSides: CGFloat = 6.0 {
+    @Published var numberOfSides: CGFloat = 6.0 {
         didSet {
             makeTombolaSegments()
         }
@@ -106,6 +93,7 @@ final class GameScene: SKScene, ObservableObject {
         
     private let motionManager = CMMotionManager()
     
+    private var noteDots: [SKShapeNode] = []
     private var tombolaSegments: [SKShapeNode] = []
 
 //    let playSound: (String) -> SKAction = {
@@ -124,13 +112,49 @@ final class GameScene: SKScene, ObservableObject {
         super.init(size: .zero)
         
         midiHelper.setup(midiManager: midiManager)
+        
+        midiHelper.didReceiveMIDIEvent = { [weak self] midiEvent in
+//            print("⚠️ MIDIEvent: \(midiEvent)")
+            DispatchQueue.main.sync {
+                switch midiEvent {
+                case .noteOn(let noteOn):
+                    self?.keyPress = Int(noteOn.note.number)
+                case .cc(let cc):
+                    let value = Double(cc.value.midi1Value)
+                    switch cc.controller.number {
+                    case 13: // Gravity
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.2, newMax: 2.2)
+                        self?.gravity = normalizedValue
+                    case 14: // Mass
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
+                        self?.mass = normalizedValue
+                    case 15: // Scale
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.2, newMax: 2.0)
+                        self?.scale = normalizedValue
+                    case 16: // Torque
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 10.0)
+                        self?.rotationSpeed = normalizedValue
+                    case 17: // Spread
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 180.0)
+                        self?.segmentOffset = normalizedValue
+                    case 18: // Vertices
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 2.0, newMax: 13.0)
+                        self?.numberOfSides = normalizedValue
+                    default:
+                        break
+                    }
+                default:
+                    break
+                }
+            }
+        }
 
         scaleMode = .aspectFit
         backgroundColor = .black
         
         physicsWorld.contactDelegate = self
         physicsWorld.speed = 3.0
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: gravity * -1)
+        setGravity(gravity)
         
         physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
         physicsBody?.categoryBitMask = PhysicsCategory.worldBoundary.rawValue
@@ -179,8 +203,8 @@ extension GameScene {
         }
         
         if isMotionEnabled, let accelerometerData = motionManager.accelerometerData {
-            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * gravity,
-                                            dy: accelerometerData.acceleration.y * gravity)
+            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 2.0,
+                                            dy: accelerometerData.acceleration.y * 2.0)
         }
         
         super.update(currentTime)
@@ -188,8 +212,8 @@ extension GameScene {
     
     func fire() {
         noteCollection
-            .forEach { [weak self] in
-                self?.midiHelper.sendNoteOn(UInt7($0))
+            .forEach { [weak self] note in
+                self?.midiHelper.sendNoteOn(UInt7(note))
             }
     }
 }
@@ -218,6 +242,7 @@ private extension GameScene {
         
         noteDot.position = CGPoint(x: view?.frame.midX ?? 0.0, y: view?.frame.midY ?? 0.0)
         
+        noteDots.append(noteDot)
         addChild(noteDot)
     }
     
@@ -254,7 +279,7 @@ private extension GameScene {
     //        tombola.physicsBody = SKPhysicsBody(edgeChainFrom: path)
             segmentNode.physicsBody?.affectedByGravity = affectedByGravity
             segmentNode.physicsBody?.pinned = !affectedByGravity
-            segmentNode.physicsBody?.mass = 1000
+            segmentNode.physicsBody?.mass = 100
             segmentNode.physicsBody?.restitution = 1.0
             segmentNode.physicsBody?.allowsRotation = true
             segmentNode.physicsBody?.categoryBitMask = PhysicsCategory.tombola.rawValue
@@ -431,45 +456,9 @@ func rotatePoints(point1: CGPoint, point2: CGPoint, angle: CGFloat) -> (CGPoint,
     
     return (rotatedPoint1, rotatedPoint2)
 }
-//func rotate(point: CGPoint, by angle: CGFloat) -> CGPoint {
-//    let x = point.x
-//    let y = point.y
-//    let rotatedX = x * cos(angle) - y * sin(angle)
-//    let rotatedY = x * sin(angle) + y * sin(angle)
-//    return CGPoint(x: rotatedX, y: rotatedY)
-//}
-//
-//func rotatePoints(point1: CGPoint, point2: CGPoint, angle: CGFloat) -> (CGPoint, CGPoint) {
-//    let centerX = point1.x + point2.x / 2.0
-//    let centerY = point1.y + point2.y / 2.0
-//    let center = CGPoint(x: centerX, y: centerY)
-//    
-//    let translatedPoint1 = CGPoint(x: point1.x - center.x, y: point1.y - center.y)
-//    let translatedPoint2 = CGPoint(x: point2.x - center.x, y: point2.y - center.y)
-//    
-//    let rotatedPoint1 = rotate(point: translatedPoint1, by: angle)
-//    let rotatedPoint2 = rotate(point: translatedPoint2, by: angle)
-//    
-//    let finalPoint1 = CGPoint(x: rotatedPoint1.x + center.x, y: rotatedPoint1.y + center.y)
-//    let finalPoint2 = CGPoint(x: rotatedPoint2.x + center.x, y: rotatedPoint2.y + center.y)
-//    
-//    return (finalPoint1, finalPoint2)
-//}
-//def rotate_points(point1, point2, angle):
-//    """Rotate two points around their center by a given angle (in radians)."""
-//    # Calculate the center point
-//    center = ((point1[0] + point2[0]) / 2, (point1[1] + point2[1]) / 2)
-//    
-//    # Translate points to origin
-//    translated_point1 = (point1[0] - center[0], point1[1] - center[1])
-//    translated_point2 = (point2[0] - center[0], point2[1] - center[1])
-//    
-//    # Rotate translated points
-//    rotated_point1 = rotate_point(translated_point1, angle)
-//    rotated_point2 = rotate_point(translated_point2, angle)
-//    
-//    # Translate rotated points back
-//    rotated_point1 = (rotated_point1[0] + center[0], rotated_point1[1] + center[1])
-//    rotated_point2 = (rotated_point2[0] + center[0], rotated_point2[1] + center[1])
-//    
-//    return rotated_point1, rotated_point2
+
+func normalize(value: Double, min: Double, max: Double, newMin: Double, newMax: Double) -> Double {
+    let normalizedValue = (value - min) / (max - min)
+    let newValue = normalizedValue * (newMax - newMin) + newMin
+    return newValue
+}
