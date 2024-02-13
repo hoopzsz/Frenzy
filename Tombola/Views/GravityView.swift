@@ -12,7 +12,7 @@ struct GravityView: View {
     @Binding var gravityX: CGFloat
     @Binding var gravityY: CGFloat
     
-    private let numberOfSides = 12
+    private let numberOfSides = 8
         
     var body: some View {
         HStack {

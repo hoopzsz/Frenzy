@@ -113,6 +113,13 @@ final class GameScene: SKScene, ObservableObject {
 
     override init() {
         super.init(size: .zero)
+
+        scaleMode = .aspectFit
+        backgroundColor = .black
+        
+        physicsWorld.contactDelegate = self
+        physicsWorld.speed = 2.0
+        setGravity(gravity)
         
         midiHelper.setup(midiManager: midiManager)
         
@@ -122,41 +129,12 @@ final class GameScene: SKScene, ObservableObject {
                 case .noteOn(let noteOn):
                     self?.keyPress = Int(noteOn.note.number)
                 case .cc(let cc):
-                    let value = Double(cc.value.midi2Value)
-                    switch cc.controller.number {
-                    case 13: // Gravity
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.1, newMax: 1.5)
-                        self?.gravity = normalizedValue
-                    case 14: // Mass
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
-                        self?.mass = normalizedValue
-                    case 15: // Scale
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.2, newMax: 2.0)
-                        self?.scale = normalizedValue
-                    case 16: // Torquex
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
-                        self?.rotationSpeed = normalizedValue
-                    case 17: // Spread
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 180.0)
-                        self?.segmentOffset = normalizedValue
-                    case 18: // Vertices
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 2.0, newMax: 13.0)
-                        self?.numberOfSides = normalizedValue
-                    default:
-                        break
-                    }
+                    self?.receiveMidiCC(cc)
                 default:
                     break
                 }
             }
         }
-
-        scaleMode = .aspectFit
-        backgroundColor = .black
-        
-        physicsWorld.contactDelegate = self
-        physicsWorld.speed = 2.0
-        setGravity(gravity)
     }
 
     override func didMove(to view: SKView) {
@@ -177,9 +155,6 @@ final class GameScene: SKScene, ObservableObject {
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
-}
-
-extension GameScene {
 
     override func update(_ currentTime: TimeInterval) {
         if previousTime == .zero {
@@ -195,7 +170,7 @@ extension GameScene {
         // Most importantly, it will concatenate note firing events that happen very close to eachother
         // which may produce unpleasent sounding results
         if previousTime + noteFiringTimeWindow < currentTime {
-            fire()
+            fireMidiEvents()
             noteCollection = []
             previousTime = currentTime
         }
@@ -208,20 +183,43 @@ extension GameScene {
         super.update(currentTime)
     }
     
-    func fire() {
+    private func fireMidiEvents() {
         noteCollection
             .forEach { [weak self] note in
                 self?.midiHelper.sendNoteOn(UInt7(note))
             }
     }
+    
+    private func receiveMidiCC(_ cc: MIDIEvent.CC) {
+        let value = Double(cc.value.midi2Value)
+        switch cc.controller.number {
+        case 13: // Gravity
+            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.1, newMax: 1.5)
+            gravity = normalizedValue
+        case 14: // Mass
+            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
+            mass = normalizedValue
+        case 15: // Scale
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.2, newMax: 2.0)
+            scale = normalizedValue
+        case 16: // Torquex
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
+            rotationSpeed = normalizedValue
+        case 17: // Spread
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 180.0)
+            segmentOffset = normalizedValue
+        case 18: // Vertices
+            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 2.0, newMax: 13.0)
+            numberOfSides = normalizedValue
+        default:
+            break
+        }
+    }
 }
-
 
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
-        let noteOccurances = noteDots.filter { $0.noteValue == noteValue }.count
-        let noteDotName = "\(noteValue)-\(noteOccurances)" // example: 36-1 is the second note dot of 36
         let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, mass: mass)
         noteDot.position = CGPoint(x: view?.frame.midX ?? 0.0, y: view?.frame.midY ?? 0.0)
         noteDots.append(noteDot)
@@ -237,11 +235,9 @@ private extension GameScene {
         let viewFrame = view?.frame ?? .zero
         let tombolaSize = viewFrame.size.width * 0.5
         
-//        let path = CGMutablePath()
         let points = calculatePolygonCoordinates(numberOfSides)
             .map { CGPoint(x: $0.0 * tombolaSize, y: $0.1 * tombolaSize) }
                 
-//        let colors: [UIColor] = [.red, .blue, .green, .gray, .yellow, .purple, .systemPink ]
         var lookaheadIndex = 1
         for point in points {
             if lookaheadIndex == points.count {
@@ -292,14 +288,27 @@ extension GameScene: SKPhysicsContactDelegate {
             guard contact.collisionImpulse > 1.0 else { return }
             if let noteDotNode = contact.bodyB.node as? NoteDot {
                 noteCollection.insert(noteDotNode.noteValue)
+//                let freq = noteNumberToFrequency(noteDotNode.noteValue)
+//                let dur = cycleDurationInMilliseconds(forFrequency: freq)
+//                playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
             }
         // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
         default:
-            // TODO use UUID to remove the correct nodes
-            let noteDot = noteDots.removeFirst(where: { $0.name == contact.bodyB.node?.name })
-            noteDot?.removeFromParent()
+            if let otherBody = contact.bodyB.node as? NoteDot {
+                noteDots
+                    .removeFirst(where: { $0.uuid == otherBody.uuid })?
+                    .removeFromParent()
+            }
         }
     }
+}
+
+private func noteNumberToFrequency(_ noteNumber: Int) -> Double {
+    pow(2.0, Double(noteNumber - 49) / 12.0) * 440.0
+}
+
+func cycleDurationInMilliseconds(forFrequency frequency: Double) -> Double {
+    1.0 / frequency * 1000.0
 }
 
 enum PhysicsCategory: CaseIterable {
@@ -328,4 +337,90 @@ import SwiftUI
 
 #Preview {
     ContentView()
+}
+
+
+//
+//
+//  Swift Pure Tone Generation
+//
+/*
+Copyright (c) 2021 Lee Barney
+ Permission is hereby granted, free of charge, to any person obtaining a
+ copy of this software and associated documentation files (the "Software"),
+ to deal in the Software without restriction, including without limitation the
+ rights to use, copy, modify, merge, publish, distribute, sublicense,
+ and/or sell copies of the Software, and to permit persons to whom the Software
+ is furnished to do so, subject to the following conditions:
+ 
+ The above copyright notice and this permission notice shall be
+ included in all copies or substantial portions of the Software.
+ 
+ 
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
+ INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
+ PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+ HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
+ CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
+ OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
+
+import Foundation
+import AVFoundation
+
+func playPureTone(frequencyInHz: Double, amplitude: Float, durationInMillis: Double, completion: @escaping ()->Void) {
+    //Use a semaphore to block until the tone completes playing
+    let semaphore = DispatchSemaphore(value: 1)
+    //Run async in the background so as not to block the current thread
+    DispatchQueue.global().async {
+        //Build the player and its engine
+        let audioPlayer = AVAudioPlayerNode()
+        let audioEngine = AVAudioEngine()
+        semaphore.wait()//Claim the semphore for blocking
+        audioEngine.attach(audioPlayer)
+        let mixer = audioEngine.mainMixerNode
+        let sampleRateHz = Float(mixer.outputFormat(forBus: 0).sampleRate)
+        
+        guard let format = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(sampleRateHz), channels: AVAudioChannelCount(1), interleaved: false) else {
+            return
+        }
+        // Connect the audio engine to the audio player
+        audioEngine.connect(audioPlayer, to: mixer, format: format)
+        
+        
+        let numberOfSamples = AVAudioFrameCount((Float(durationInMillis) / 1000 * sampleRateHz))
+        //create the appropriatly sized buffer
+        guard let buffer  = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: numberOfSamples) else {
+            return
+        }
+        buffer.frameLength = numberOfSamples
+        //get a pointer to the buffer of floats
+        let channels = UnsafeBufferPointer(start: buffer.floatChannelData, count: Int(format.channelCount))
+        let floats = UnsafeMutableBufferPointer<Float>(start: channels[0], count: Int(numberOfSamples))
+        //calculate the angular frequency
+        let angularFrequency = Float(frequencyInHz * 2) * .pi
+        // Generate and store the sequential samples representing the sine wave of the tone
+        for i in 0 ..< Int(numberOfSamples) {
+            let waveComponent = sinf(Float(i) * angularFrequency / sampleRateHz)
+            floats[i] = waveComponent * amplitude
+        }
+        do {
+            try audioEngine.start()
+        }
+        catch{
+            print("Error: Engine start failure")
+            return
+        }
+
+        // Play the pure tone represented by the buffer
+        audioPlayer.play()
+        audioPlayer.scheduleBuffer(buffer, at: nil, options: .interrupts){
+            DispatchQueue.main.async {
+                completion()
+                semaphore.signal()//Release one claim of the semiphore
+            }
+        }
+        semaphore.wait()//Wait for the semiphore so the function doesn't end before the playing of the tone completes
+        semaphore.signal()//Release the other claim of the semiphore
+    }
 }

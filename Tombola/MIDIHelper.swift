@@ -45,7 +45,7 @@ final class MIDIHelper: ObservableObject {
             // "IDAM MIDI Host" is the name of the MIDI input and output that iOS creates
             // on the iOS device once a user has clicked 'Enable' in Audio MIDI Setup on the Mac
             // to establish the USB audio/MIDI connection to the iOS device.
-//            
+            
             print("Creating MIDI input connection.")
             try midiManager.addInputConnection(
                 to: .outputs(matching: [.name("IDAM MIDI Host")]),
@@ -53,31 +53,20 @@ final class MIDIHelper: ObservableObject {
                 receiver: .events(options: [.bundleRPNAndNRPNDataEntryLSB, .filterActiveSensingAndClock], { [weak self] events, timestamp, outputEndpoint in
                     if let event = events.first {
                         self?.didReceiveMIDIEvent(event)
-//                        print("⚠️ received event: \(event)")
-//                        switch event {
-//                        case .noteOn(let noteOnData):
-//                            self.noteOnNumber = noteOnData.note.number
-//                        default:
-//                            break
-//                        }
                     }
                 })
-//                receiver: .eventsLogging(options: [
-//                    .bundleRPNAndNRPNDataEntryLSB,
-//                    .filterActiveSensingAndClock
-//                ])
             )
             
             print("Creating MIDI output connection.")
-//            try midiManager.addOutputConnection(
-//                to: .inputs(matching: [.name("IDAM MIDI Host")]),
-//                tag: Self.outputConnectionName
-//            )
-            
             try midiManager.addOutputConnection(
-                to: .allInputs,
+                to: .inputs(matching: [.name("IDAM MIDI Host")]),
                 tag: Self.outputConnectionName
             )
+//            
+//            try midiManager.addOutputConnection(
+//                to: .allInputs,
+//                tag: Self.outputConnectionName
+//            )
             
         } catch {
             print("Error creating MIDI output connection:", error.localizedDescription)
