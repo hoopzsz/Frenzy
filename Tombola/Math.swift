@@ -56,3 +56,11 @@ func normalize(value: Double, min: Double, max: Double, newMin: Double, newMax: 
     let newValue = normalizedValue * (newMax - newMin) + newMin
     return newValue
 }
+
+func noteNumberToFrequency(_ noteNumber: Int) -> Double {
+    pow(2.0, Double(noteNumber - 49) / 12.0) * 440.0
+}
+
+func cycleDurationInMilliseconds(forFrequency frequency: Double) -> Double {
+    1.0 / frequency * 1000.0
+}

@@ -15,6 +15,8 @@ struct GravityView: View {
     private let numberOfSides = 8
         
     var body: some View {
+        let adjustedGravityX = (gravityX - 0.5)// * 5.0
+        let adjustedGravityY = (gravityY - 0.5)// * 5.0
         HStack {
             VStack {
                 Spacer()
@@ -24,7 +26,9 @@ struct GravityView: View {
                             .stroke(Color.gray, lineWidth: 0.5)
                             .fill(.clear)
                         
-                        let offset = (gravityX, (gravityY - 3.0) * 4)
+//                        let offset = (gravityX, (gravityY - 0.5) * 5)
+                   
+                    let offset = (adjustedGravityX, adjustedGravityY)
 //                        let frame = geometry.frame(in: .local)
                         // Draw a path from the center to the circle
 //                        Path { path in
@@ -34,7 +38,7 @@ struct GravityView: View {
 //                        .stroke(Color.gray, lineWidth: 0.5)
                         Circle()
                             .frame(width: 2.0, height: 2.0)
-                            .offset(x: offset.0, y: offset.1) // normalize from slider value by subtracting 3.0, then visually exagerrate by multiplying 4
+                            .offset(x: offset.0 * 15.0, y: offset.1 * 20.0) // Exagerate the visual appearance with the 20x multiplier
                             .foregroundStyle(.orange)
 //                    }
 //                    .frame(width: 30, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
@@ -43,9 +47,10 @@ struct GravityView: View {
             }
             VStack {
                 Spacer()
-                let x = String(format: "%.2f", gravityX)
-                let y = String(format: "%.2f", gravityY - 3.0)
-                Text("\(x), \(y)")
+                /// Multiply each value by 2 so the values read from `-1.0...1.0`
+                let x = String(format: "%.2f", adjustedGravityX * 2.0)
+                let y = String(format: "%.2f", adjustedGravityY * 2.0)
+                Text("x: \(x)\ny: \(y)")
                     .font(.system(size: 8))
                     .multilineTextAlignment(.leading)
             }

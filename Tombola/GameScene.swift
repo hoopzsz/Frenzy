@@ -31,24 +31,31 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    @Published var gravity: CGFloat = 3.3 {
+    var isInternalSoundEnabled: Bool = false
+    
+    @Published var gravityX: CGFloat = 0.5 {
         didSet {
-            setGravity(gravity)
+            setGravity(x: gravityX, y: gravityY)
         }
     }
     
-    func setGravity(_ gravity: CGFloat) {
-        let normalizedGravity = (gravity - 3) * -1 // normalize to -3 to 3.0, then reverse
-        physicsWorld.gravity = CGVector(dx: 0.0, dy: normalizedGravity)
+    private var gravityYBeforeMotionEnabling = 0.0
+    
+    @Published var gravityY: CGFloat = 0.6 {
+        didSet {
+            setGravity(x: gravityX, y: gravityY)
+        }
     }
     
     @Published var isMotionEnabled: Bool = false {
         didSet {
             print("⚠️ isMotionEnabled didSet: \(isMotionEnabled)")
             if isMotionEnabled {
+                gravityYBeforeMotionEnabling = gravityY
                 // Handled by update method
             } else {
-                setGravity(gravity)
+                gravityY = gravityYBeforeMotionEnabling
+                gravityX = 0.5
             }
         }
     }
@@ -95,12 +102,14 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
         
-    private let motionManager = CMMotionManager()
-    
     @Published var noteDots: [NoteDot] = []
     
+    @Published var spawnPosition: CGPoint = .zero
+    
     private var tombolaSegments: [SKShapeNode] = []
-
+    
+    private let motionManager = CMMotionManager()
+    
     private let midiManager = ObservableMIDIManager(
         clientName: "TestAppMIDIManager",
         model: "TestApp",
@@ -108,8 +117,6 @@ final class GameScene: SKScene, ObservableObject {
     )
     
     private let midiHelper = MIDIHelper()
-    
-    @Published var spawnPosition: CGPoint = .zero
 
     override init() {
         super.init(size: .zero)
@@ -119,7 +126,7 @@ final class GameScene: SKScene, ObservableObject {
         
         physicsWorld.contactDelegate = self
         physicsWorld.speed = 2.0
-        setGravity(gravity)
+        setGravity(x: gravityX, y: gravityY)
         
         midiHelper.setup(midiManager: midiManager)
         
@@ -140,6 +147,8 @@ final class GameScene: SKScene, ObservableObject {
     override func didMove(to view: SKView) {
         super.didMove(to: view)
 
+        spawnPosition = CGPoint(x: view.frame.midX, y: view.frame.midY)
+        
         motionManager.startAccelerometerUpdates()
 
         view.backgroundColor = backgroundColor
@@ -166,8 +175,7 @@ final class GameScene: SKScene, ObservableObject {
             $0.zRotation = r
         }
 
-        // This allows us to 'quantize' our note firing events
-        // Most importantly, it will concatenate note firing events that happen very close to eachother
+        // This allows us to concatenate note firing events that happen very close to eachother
         // which may produce unpleasent sounding results
         if previousTime + noteFiringTimeWindow < currentTime {
             fireMidiEvents()
@@ -176,8 +184,13 @@ final class GameScene: SKScene, ObservableObject {
         }
         
         if isMotionEnabled, let accelerometerData = motionManager.accelerometerData {
-            physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 2.0,
-                                            dy: accelerometerData.acceleration.y * 2.0)
+            /// Shift the range from `-1.0...1.0` to `0.0...2.0`, then cut it in half to `0.0...1.0`
+            let adjustedX = (accelerometerData.acceleration.x + 1.0) * 0.5
+            /// Same as above comment, but first reverse the accelerometer's y value by multiplying by -1
+            let adjustedY = ((accelerometerData.acceleration.y * -1) + 1.0) * 0.5
+    
+            gravityX = adjustedX
+            gravityY = adjustedY
         }
 
         super.update(currentTime)
@@ -194,8 +207,9 @@ final class GameScene: SKScene, ObservableObject {
         let value = Double(cc.value.midi2Value)
         switch cc.controller.number {
         case 13: // Gravity
-            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.1, newMax: 1.5)
-            gravity = normalizedValue
+            guard isMotionEnabled == false else { return }
+            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 1.0)
+            gravityY = normalizedValue
         case 14: // Mass
             let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
             mass = normalizedValue
@@ -215,13 +229,26 @@ final class GameScene: SKScene, ObservableObject {
             break
         }
     }
+    
+    private func setGravity(x: CGFloat = 0.0, y: CGFloat) {
+        /// The gravity value range is `0.0...1.0`. By subtracting `-0.5`, we move the range to `-0.5...0.5` allowing the user to make either donwards or upwards gravity
+        let adjustedX = x - 0.5
+        let adjustedY = y - 0.5
+        let gravityMultiplier = -2.0 // Create additional strength and reverse the values
+        physicsWorld.gravity = CGVector(dx: adjustedX * gravityMultiplier,
+                                        dy: adjustedY * gravityMultiplier)
+    }
 }
 
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
         let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, mass: mass)
-        noteDot.position = CGPoint(x: view?.frame.midX ?? 0.0, y: view?.frame.midY ?? 0.0)
+        let viewFrame = view?.frame
+        // We have to do some math here to convert from SwiftUI's upper-left coordinate space
+        // To SpriteKit's bottom-left coordinate space
+        let positionY = (viewFrame?.maxY ?? 0.0) - spawnPosition.y
+        noteDot.position = CGPoint(x: spawnPosition.x, y: positionY)
         noteDots.append(noteDot)
         addChild(noteDot)
     }
@@ -288,9 +315,11 @@ extension GameScene: SKPhysicsContactDelegate {
             guard contact.collisionImpulse > 1.0 else { return }
             if let noteDotNode = contact.bodyB.node as? NoteDot {
                 noteCollection.insert(noteDotNode.noteValue)
-//                let freq = noteNumberToFrequency(noteDotNode.noteValue)
-//                let dur = cycleDurationInMilliseconds(forFrequency: freq)
-//                playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
+                if isInternalSoundEnabled {
+                    let freq = noteNumberToFrequency(noteDotNode.noteValue)
+                    let dur = cycleDurationInMilliseconds(forFrequency: freq)
+                    playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
+                }
             }
         // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
         default:
@@ -301,14 +330,6 @@ extension GameScene: SKPhysicsContactDelegate {
             }
         }
     }
-}
-
-private func noteNumberToFrequency(_ noteNumber: Int) -> Double {
-    pow(2.0, Double(noteNumber - 49) / 12.0) * 440.0
-}
-
-func cycleDurationInMilliseconds(forFrequency frequency: Double) -> Double {
-    1.0 / frequency * 1000.0
 }
 
 enum PhysicsCategory: CaseIterable {
@@ -338,7 +359,6 @@ import SwiftUI
 #Preview {
     ContentView()
 }
-
 
 //
 //
