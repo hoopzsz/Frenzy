@@ -101,10 +101,6 @@ final class GameScene: SKScene, ObservableObject {
     
     private var tombolaSegments: [SKShapeNode] = []
 
-//    let playSound: (String) -> SKAction = {
-//        SKAction.playSoundFileNamed($0, waitForCompletion: false)
-//    }
-    
     private let midiManager = ObservableMIDIManager(
         clientName: "TestAppMIDIManager",
         model: "TestApp",
@@ -121,7 +117,6 @@ final class GameScene: SKScene, ObservableObject {
         midiHelper.setup(midiManager: midiManager)
         
         midiHelper.didReceiveMIDIEvent = { [weak self] midiEvent in
-//            print("⚠️ MIDIEvent: \(midiEvent)")
             DispatchQueue.main.sync {
                 switch midiEvent {
                 case .noteOn(let noteOn):
@@ -138,7 +133,7 @@ final class GameScene: SKScene, ObservableObject {
                     case 15: // Scale
                         let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.2, newMax: 2.0)
                         self?.scale = normalizedValue
-                    case 16: // Torque
+                    case 16: // Torquex
                         let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
                         self?.rotationSpeed = normalizedValue
                     case 17: // Spread
@@ -177,7 +172,6 @@ final class GameScene: SKScene, ObservableObject {
         physicsBody = SKPhysicsBody(edgeLoopFrom: view.frame.insetBy(dx: -6.0, dy: -6.0)) // dot radius minus 1
 
         makeTombolaSegments()
-        makeSpawnPositionNode()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -188,16 +182,18 @@ final class GameScene: SKScene, ObservableObject {
 extension GameScene {
 
     override func update(_ currentTime: TimeInterval) {
-        let shakeMult = didShake ? -1.0 : 1.0
-        r += (rotationSpeed - 5) * 0.01 * -1 * shakeMult
-        tombolaSegments.forEach {
-            $0.zRotation = r
-        }
-        
         if previousTime == .zero {
             previousTime = currentTime
         }
         
+        r += (rotationSpeed - 5) * 0.01 * -1
+        tombolaSegments.forEach {
+            $0.zRotation = r
+        }
+
+        // This allows us to 'quantize' our note firing events
+        // Most importantly, it will concatenate note firing events that happen very close to eachother
+        // which may produce unpleasent sounding results
         if previousTime + noteFiringTimeWindow < currentTime {
             fire()
             noteCollection = []
@@ -208,14 +204,7 @@ extension GameScene {
             physicsWorld.gravity = CGVector(dx: accelerometerData.acceleration.x * 2.0,
                                             dy: accelerometerData.acceleration.y * 2.0)
         }
-        
-//        noteDots.forEach {
-//            let offScreenRight = $0.position.x > view?.scene?.frame.maxX ?? 0
-//            let offScreenLeft = $0.position.x < 0
-//            if $0.position.x
-//            print("noteDot.position: \($0.position)")
-//        }
-        
+
         super.update(currentTime)
     }
     
@@ -227,48 +216,13 @@ extension GameScene {
     }
 }
 
-final class NoteDot: SKShapeNode {
-    
-    let noteValue: Int
-    
-    init(radius: CGFloat, noteValue: Int, name: String, mass: CGFloat) {
-        self.noteValue = noteValue
-        
-        super.init()
-    
-        let path = CGMutablePath()
-        path.addArc(center: .zero, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: true)
-        self.path = path
-        self.name = name
-
-        fillColor = .white
-        strokeColor = .white
-        physicsBody = SKPhysicsBody(circleOfRadius: radius)
-        physicsBody?.mass = mass
-        physicsBody?.density = 0
-        physicsBody?.friction = mass
-        physicsBody?.restitution = 1
-        physicsBody?.linearDamping = mass
-        physicsBody?.angularDamping = mass
-        physicsBody?.allowsRotation = true
-        physicsBody?.usesPreciseCollisionDetection = true
-        physicsBody?.categoryBitMask = PhysicsCategory.dot.bitMask
-        physicsBody?.collisionBitMask = PhysicsCategory.tombola.bitMask
-        physicsBody?.contactTestBitMask = PhysicsCategory.tombola.bitMask | PhysicsCategory.worldBoundary.bitMask
-    }
-    
-    required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
-    }
-
-}
 
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
         let noteOccurances = noteDots.filter { $0.noteValue == noteValue }.count
         let noteDotName = "\(noteValue)-\(noteOccurances)" // example: 36-1 is the second note dot of 36
-        let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, name: noteDotName, mass: mass)
+        let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, mass: mass)
         noteDot.position = CGPoint(x: view?.frame.midX ?? 0.0, y: view?.frame.midY ?? 0.0)
         noteDots.append(noteDot)
         addChild(noteDot)
@@ -320,36 +274,6 @@ private extension GameScene {
             lookaheadIndex += 1
         }
     }
-    
-    func makeSpawnPositionNode() {
-        let viewFrame = view?.frame ?? .zero
-        let size = viewFrame.size.width * 0.03
-        let halfSize = size * 0.5
-        let path = CGMutablePath()
-
-        path.move(to: CGPoint(x: -halfSize, y: 0))
-        path.addLine(to: CGPoint(x: halfSize, y: 0))
-        path.move(to: CGPoint(x: 0, y: -halfSize))
-        path.addLine(to: CGPoint(x: 0, y: halfSize))
-        
-        let spawnPositionNode = SKShapeNode(path: path)
-        spawnPositionNode.lineCap = .square
-        spawnPositionNode.lineWidth = 1.0
-        spawnPositionNode.strokeColor = .gray
-        spawnPositionNode.position = view?.center ?? .zero
-        
-        let label = SKLabelNode(text: "spawn")
-        label.fontColor = .gray
-        label.fontName = "SFPro-Black"
-        label.fontSize = 7.0
-        label.position = CGPoint(x: label.position.x + 20.0, y: label.position.y - 4.0)
-        spawnPositionNode.addChild(label)
-        
-//        spawnPositionNode.position = CGPoint(x: spawnPosition.x + 30, y: spawnPosition.y + 30)
-//        label.posi
-        
-        addChild(spawnPositionNode)
-    }
 }
 
 extension GameScene: SKPhysicsContactDelegate {
@@ -368,29 +292,12 @@ extension GameScene: SKPhysicsContactDelegate {
             guard contact.collisionImpulse > 1.0 else { return }
             if let noteDotNode = contact.bodyB.node as? NoteDot {
                 noteCollection.insert(noteDotNode.noteValue)
-            } else {
-                print("⚠️")
             }
-        default: // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
-            print("⚠️ default contact case")
+        // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
+        default:
+            // TODO use UUID to remove the correct nodes
             let noteDot = noteDots.removeFirst(where: { $0.name == contact.bodyB.node?.name })
             noteDot?.removeFromParent()
-        }
-    }
-}
-
-extension Array {
-    
-    mutating func removeFirst(where predicate: (Element) throws -> Bool) rethrows -> Element? {
-        do {
-            if let firstIndex = try firstIndex(where: predicate) {
-                return self.remove(at: firstIndex)
-            } else {
-                return nil
-            }
-        }
-        catch {
-            throw error
         }
     }
 }
@@ -421,54 +328,4 @@ import SwiftUI
 
 #Preview {
     ContentView()
-}
-
-func calculatePolygonCoordinates(_ numberOfSides: Int) -> [(Double, Double)] {
-    var coordinates = [(Double, Double)]()
-    for i in 0..<numberOfSides {
-        let angle = 2 * Double.pi * Double(i) / Double(numberOfSides)
-        let x = cos(angle)
-        let y = sin(angle)
-        coordinates.append((x, y))
-    }
-    return coordinates
-}
-
-func degreesToRadians(degrees: Double) -> Double {
-    degrees * Double.pi / 180.0
-}
-
-// Function to rotate a point by a given angle (in radians) around the origin
-func rotatePoint(point: CGPoint, angle: CGFloat) -> CGPoint {
-    let rotatedX = point.x * cos(angle) - point.y * sin(angle)
-    let rotatedY = point.x * sin(angle) + point.y * cos(angle)
-    return CGPoint(x: rotatedX, y: rotatedY)
-}
-
-// Function to rotate two points around their center by a given angle (in radians)
-func rotatePoints(point1: CGPoint, point2: CGPoint, angle: CGFloat) -> (CGPoint, CGPoint) {
-    // Calculate the center point
-    let centerX = (point1.x + point2.x) / 2
-    let centerY = (point1.y + point2.y) / 2
-    let center = CGPoint(x: centerX, y: centerY)
-    
-    // Translate points to origin
-    let translatedPoint1 = CGPoint(x: point1.x - center.x, y: point1.y - center.y)
-    let translatedPoint2 = CGPoint(x: point2.x - center.x, y: point2.y - center.y)
-    
-    // Rotate translated points
-    let rotatedTranslatedPoint1 = rotatePoint(point: translatedPoint1, angle: angle)
-    let rotatedTranslatedPoint2 = rotatePoint(point: translatedPoint2, angle: angle)
-    
-    // Translate rotated points back
-    let rotatedPoint1 = CGPoint(x: rotatedTranslatedPoint1.x + center.x, y: rotatedTranslatedPoint1.y + center.y)
-    let rotatedPoint2 = CGPoint(x: rotatedTranslatedPoint2.x + center.x, y: rotatedTranslatedPoint2.y + center.y)
-    
-    return (rotatedPoint1, rotatedPoint2)
-}
-
-func normalize(value: Double, min: Double, max: Double, newMin: Double, newMax: Double) -> Double {
-    let normalizedValue = (value - min) / (max - min)
-    let newValue = normalizedValue * (newMax - newMin) + newMin
-    return newValue
 }
