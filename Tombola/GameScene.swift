@@ -21,12 +21,17 @@ final class GameScene: SKScene, ObservableObject {
     
     var didShake = false {
         didSet {
-            print("⚠️ Shake detected: \(didShake)")
-            makeTombolaSegments(affectedByGravity: true)
+//            print("⚠️ Shake detected: \(didShake)")
+//            noteDots.forEach {
+//                if let physicsBody = $0.physicsBody {
+//                    physicsBody.velocity = CGVector(dx: physicsBody.velocity.dx * -1,
+//                                                    dy: physicsBody.velocity.dy * -1)
+//                }
+//            }
         }
     }
     
-    @Published var gravity: CGFloat = 4.0 {
+    @Published var gravity: CGFloat = 3.3 {
         didSet {
             setGravity(gravity)
         }
@@ -48,13 +53,12 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    @Published var mass: CGFloat = 1.0 {
+    @Published var mass: CGFloat = 0.0 {
         didSet {
             noteDots.forEach {
-                $0.physicsBody?.mass = mass
+                $0.physicsBody?.linearDamping = mass
+                $0.physicsBody?.angularDamping = mass
             }
-//            physicsBody
-            // Update dot body masses
         }
     }
     
@@ -68,15 +72,15 @@ final class GameScene: SKScene, ObservableObject {
     
     var r: CGFloat = 0
     
-    @Published var rotationSpeed: CGFloat = 4.0
+    @Published var rotationSpeed: CGFloat = 5.5
     
-    @Published  var segmentOffset: CGFloat = 0.0 {
+    @Published var segmentOffset: CGFloat = 0.0 {
         didSet {
             makeTombolaSegments() // we have to redraw new points
         }
     }
 
-    @Published var scale: CGFloat = 1.5 {
+    @Published var scale: CGFloat = 0.75 {
         didSet {
             tombolaSegments.forEach {
                 $0.xScale = scale
@@ -93,7 +97,8 @@ final class GameScene: SKScene, ObservableObject {
         
     private let motionManager = CMMotionManager()
     
-    private var noteDots: [SKShapeNode] = []
+    @Published var noteDots: [NoteDot] = []
+    
     private var tombolaSegments: [SKShapeNode] = []
 
 //    let playSound: (String) -> SKAction = {
@@ -107,6 +112,8 @@ final class GameScene: SKScene, ObservableObject {
     )
     
     private let midiHelper = MIDIHelper()
+    
+    @Published var spawnPosition: CGPoint = .zero
 
     override init() {
         super.init(size: .zero)
@@ -120,22 +127,22 @@ final class GameScene: SKScene, ObservableObject {
                 case .noteOn(let noteOn):
                     self?.keyPress = Int(noteOn.note.number)
                 case .cc(let cc):
-                    let value = Double(cc.value.midi1Value)
+                    let value = Double(cc.value.midi2Value)
                     switch cc.controller.number {
                     case 13: // Gravity
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.2, newMax: 2.2)
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.1, newMax: 1.5)
                         self?.gravity = normalizedValue
                     case 14: // Mass
                         let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
                         self?.mass = normalizedValue
                     case 15: // Scale
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.2, newMax: 2.0)
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.2, newMax: 2.0)
                         self?.scale = normalizedValue
                     case 16: // Torque
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 10.0)
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
                         self?.rotationSpeed = normalizedValue
                     case 17: // Spread
-                        let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 180.0)
+                        let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 180.0)
                         self?.segmentOffset = normalizedValue
                     case 18: // Vertices
                         let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 2.0, newMax: 13.0)
@@ -153,12 +160,8 @@ final class GameScene: SKScene, ObservableObject {
         backgroundColor = .black
         
         physicsWorld.contactDelegate = self
-        physicsWorld.speed = 3.0
+        physicsWorld.speed = 2.0
         setGravity(gravity)
-        
-        physicsBody = SKPhysicsBody(edgeLoopFrom: frame)
-        physicsBody?.categoryBitMask = PhysicsCategory.worldBoundary.rawValue
-        physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
     }
 
     override func didMove(to view: SKView) {
@@ -168,15 +171,13 @@ final class GameScene: SKScene, ObservableObject {
 
         view.backgroundColor = backgroundColor
         view.ignoresSiblingOrder = true
-        
-        let cameraNode = SKCameraNode()
-        cameraNode.position = CGPoint(x: size.width / 2, y: size.height / 2)
-        addChild(cameraNode)
-        cameraNode.xScale = 2
-        cameraNode.yScale = 2
-        camera = cameraNode
+
+        physicsBody?.categoryBitMask = PhysicsCategory.worldBoundary.bitMask
+        physicsBody?.contactTestBitMask = PhysicsCategory.dot.bitMask
+        physicsBody = SKPhysicsBody(edgeLoopFrom: view.frame.insetBy(dx: -6.0, dy: -6.0)) // dot radius minus 1
 
         makeTombolaSegments()
+        makeSpawnPositionNode()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -187,7 +188,8 @@ final class GameScene: SKScene, ObservableObject {
 extension GameScene {
 
     override func update(_ currentTime: TimeInterval) {
-        r += (rotationSpeed - 5) * 0.01 * -1
+        let shakeMult = didShake ? -1.0 : 1.0
+        r += (rotationSpeed - 5) * 0.01 * -1 * shakeMult
         tombolaSegments.forEach {
             $0.zRotation = r
         }
@@ -207,6 +209,13 @@ extension GameScene {
                                             dy: accelerometerData.acceleration.y * 2.0)
         }
         
+//        noteDots.forEach {
+//            let offScreenRight = $0.position.x > view?.scene?.frame.maxX ?? 0
+//            let offScreenLeft = $0.position.x < 0
+//            if $0.position.x
+//            print("noteDot.position: \($0.position)")
+//        }
+        
         super.update(currentTime)
     }
     
@@ -218,35 +227,54 @@ extension GameScene {
     }
 }
 
+final class NoteDot: SKShapeNode {
+    
+    let noteValue: Int
+    
+    init(radius: CGFloat, noteValue: Int, name: String, mass: CGFloat) {
+        self.noteValue = noteValue
+        
+        super.init()
+    
+        let path = CGMutablePath()
+        path.addArc(center: .zero, radius: radius, startAngle: 0, endAngle: .pi * 2, clockwise: true)
+        self.path = path
+        self.name = name
+
+        fillColor = .white
+        strokeColor = .white
+        physicsBody = SKPhysicsBody(circleOfRadius: radius)
+        physicsBody?.mass = mass
+        physicsBody?.density = 0
+        physicsBody?.friction = mass
+        physicsBody?.restitution = 1
+        physicsBody?.linearDamping = mass
+        physicsBody?.angularDamping = mass
+        physicsBody?.allowsRotation = true
+        physicsBody?.usesPreciseCollisionDetection = true
+        physicsBody?.categoryBitMask = PhysicsCategory.dot.bitMask
+        physicsBody?.collisionBitMask = PhysicsCategory.tombola.bitMask
+        physicsBody?.contactTestBitMask = PhysicsCategory.tombola.bitMask | PhysicsCategory.worldBoundary.bitMask
+    }
+    
+    required init?(coder aDecoder: NSCoder) {
+        fatalError("init(coder:) has not been implemented")
+    }
+
+}
+
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
-        let r = 10.0
-        let path = CGMutablePath()
-        path.addArc(center: .zero, radius: r, startAngle: 0, endAngle: .pi * 2, clockwise: true)
-        let noteDot = SKShapeNode(path: path)
-        noteDot.name = "\(noteValue)"
-        noteDot.fillColor = .white
-        noteDot.strokeColor = .white
-        noteDot.physicsBody = SKPhysicsBody(circleOfRadius: r)
-        noteDot.physicsBody?.mass = 1// r * 0.1
-        noteDot.physicsBody?.restitution = 1
-        noteDot.physicsBody?.friction = 0
-        noteDot.physicsBody?.linearDamping = 0
-        noteDot.physicsBody?.angularDamping = 0
-        noteDot.physicsBody?.allowsRotation = true
-        noteDot.physicsBody?.usesPreciseCollisionDetection = true
-        noteDot.physicsBody?.categoryBitMask = PhysicsCategory.dot.rawValue
-        noteDot.physicsBody?.collisionBitMask = PhysicsCategory.dot.rawValue | PhysicsCategory.tombola.rawValue | PhysicsCategory.worldBoundary.rawValue
-        noteDot.physicsBody?.contactTestBitMask = PhysicsCategory.tombola.rawValue | PhysicsCategory.worldBoundary.rawValue
-        
+        let noteOccurances = noteDots.filter { $0.noteValue == noteValue }.count
+        let noteDotName = "\(noteValue)-\(noteOccurances)" // example: 36-1 is the second note dot of 36
+        let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, name: noteDotName, mass: mass)
         noteDot.position = CGPoint(x: view?.frame.midX ?? 0.0, y: view?.frame.midY ?? 0.0)
-        
         noteDots.append(noteDot)
         addChild(noteDot)
     }
     
-    func makeTombolaSegments(affectedByGravity: Bool = false) {
+    func makeTombolaSegments() {
         self.tombolaSegments.forEach {
             $0.removeFromParent()
         }
@@ -268,23 +296,21 @@ private extension GameScene {
             let path = CGMutablePath()
             let rotatedPoints = rotatePoints(point1: point, point2: points[lookaheadIndex],
                                              angle: degreesToRadians(degrees: segmentOffset))
-//            path.move(to: point)
-//            path.addLine(to: points[lookaheadIndex])
             path.move(to: rotatedPoints.0)
             path.addLine(to: rotatedPoints.1)
             let segmentNode = SKShapeNode(path: path)
             segmentNode.lineWidth = 3.0
-            segmentNode.strokeColor = .orange // colors.randomElement() ?? .white
+            segmentNode.strokeColor = .orange
             segmentNode.physicsBody = SKPhysicsBody(edgeFrom: rotatedPoints.0, to: rotatedPoints.1)
-    //        tombola.physicsBody = SKPhysicsBody(edgeChainFrom: path)
-            segmentNode.physicsBody?.affectedByGravity = affectedByGravity
-            segmentNode.physicsBody?.pinned = !affectedByGravity
-            segmentNode.physicsBody?.mass = 100
+            segmentNode.physicsBody?.affectedByGravity = false
+            segmentNode.physicsBody?.pinned = true
+            segmentNode.physicsBody?.mass = 1.0
+            segmentNode.physicsBody?.density = 1.0
             segmentNode.physicsBody?.restitution = 1.0
             segmentNode.physicsBody?.allowsRotation = true
-            segmentNode.physicsBody?.categoryBitMask = PhysicsCategory.tombola.rawValue
-            segmentNode.physicsBody?.collisionBitMask = PhysicsCategory.dot.rawValue
-            segmentNode.physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
+            segmentNode.physicsBody?.categoryBitMask = PhysicsCategory.tombola.bitMask
+            segmentNode.physicsBody?.collisionBitMask = PhysicsCategory.dot.bitMask
+            segmentNode.physicsBody?.contactTestBitMask = PhysicsCategory.dot.bitMask
             segmentNode.physicsBody?.usesPreciseCollisionDetection = true
             segmentNode.position = CGPoint(x: view?.frame.midX ?? .zero, y: view?.frame.midY ?? .zero)
             segmentNode.xScale = scale
@@ -295,115 +321,99 @@ private extension GameScene {
         }
     }
     
-//    func makeTombola() {
-//        let numberOfSides = Int(self.numberOfSides)
-//        let viewFrame = view?.frame ?? .zero
-//        let tombolaSize = viewFrame.size.width * 0.5
-//        let path = CGMutablePath()
-//        var points = calculatePolygonCoordinates(numberOfSides)
-//            .map { CGPoint(x: $0.0 * tombolaSize, y: $0.1 * tombolaSize) }
-//        points.append(points[0]) // to close the drawing
-//        path.move(to: points[0])
-//        points.forEach { path.addLine(to: $0) }
-//        let tombola = SKShapeNode(points: &points, count: points.count)
-//        tombola.lineWidth = 2.0
-//        tombola.lineJoin = .round
-//        
-//        tombola.physicsBody = SKPhysicsBody(edgeLoopFrom: path)
-////        tombola.physicsBody = SKPhysicsBody(edgeChainFrom: path)
-//        tombola.physicsBody?.affectedByGravity = false
-////        tombola.physicsBody?.pinned = true
-//        tombola.physicsBody?.mass = 1000
-//        tombola.physicsBody?.allowsRotation = true
-//        tombola.physicsBody?.categoryBitMask = PhysicsCategory.tombola.rawValue
-//        tombola.physicsBody?.collisionBitMask = PhysicsCategory.dot.rawValue
-//        tombola.physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
-//        tombola.physicsBody?.usesPreciseCollisionDetection = true
-//        tombola.position = CGPoint(x: view?.frame.midX ?? .zero, y: view?.frame.midY ?? .zero)
-//        self.tombola = tombola
-//        addChild(tombola)
-//        
-//        for i in (1...3) {
-//            let path = CGMutablePath()
-//            var points = calculatePolygonCoordinates(numberOfSides)
-//                .map { CGPoint(x: $0.0 * tombolaSize, y: $0.1 * tombolaSize) }
-//            points.append(points[0]) // to close the drawing
-//            path.move(to: points[0])
-//            points.forEach { path.addLine(to: $0) }
-//            let tombola = SKShapeNode(points: &points, count: points.count)
-//            tombola.lineWidth = 2.0
-//            tombola.lineJoin = .round
-//            tombola.strokeColor = .orange
-//            
-//            tombola.physicsBody = SKPhysicsBody(edgeLoopFrom: path)
-//    //        tombola.physicsBody = SKPhysicsBody(edgeChainFrom: path)
-//            tombola.physicsBody?.affectedByGravity = false
-//    //        tombola.physicsBody?.pinned = true
-//            tombola.physicsBody?.mass = 1000
-//            tombola.physicsBody?.allowsRotation = true
-//            tombola.physicsBody?.categoryBitMask = PhysicsCategory.tombola.rawValue
-//            tombola.physicsBody?.collisionBitMask = PhysicsCategory.dot.rawValue
-//            tombola.physicsBody?.contactTestBitMask = PhysicsCategory.dot.rawValue
-////            tombola.physicsBody?.usesPreciseCollisionDetection = true
-//            tombola.position = CGPoint(x: view?.frame.midX ?? .zero, y: view?.frame.midY ?? .zero)
-////            self.tombola = tombola
-//            addChild(tombola)
-////            tombolaBorders.append
-//            switch i {
-//            case 1:
-//                tombola1 = tombola
-//            case 2:
-//                tombola2 = tombola
-//            case 3:
-//                tombola3 = tombola
-//            case 4:
-//                tombola4 = tombola
-//            case 5:
-//                tombola5 = tombola
-//            default:
-//                break
-//            }
-//        }
-//    }
+    func makeSpawnPositionNode() {
+        let viewFrame = view?.frame ?? .zero
+        let size = viewFrame.size.width * 0.03
+        let halfSize = size * 0.5
+        let path = CGMutablePath()
+
+        path.move(to: CGPoint(x: -halfSize, y: 0))
+        path.addLine(to: CGPoint(x: halfSize, y: 0))
+        path.move(to: CGPoint(x: 0, y: -halfSize))
+        path.addLine(to: CGPoint(x: 0, y: halfSize))
+        
+        let spawnPositionNode = SKShapeNode(path: path)
+        spawnPositionNode.lineCap = .square
+        spawnPositionNode.lineWidth = 1.0
+        spawnPositionNode.strokeColor = .gray
+        spawnPositionNode.position = view?.center ?? .zero
+        
+        let label = SKLabelNode(text: "spawn")
+        label.fontColor = .gray
+        label.fontName = "SFPro-Black"
+        label.fontSize = 7.0
+        label.position = CGPoint(x: label.position.x + 20.0, y: label.position.y - 4.0)
+        spawnPositionNode.addChild(label)
+        
+//        spawnPositionNode.position = CGPoint(x: spawnPosition.x + 30, y: spawnPosition.y + 30)
+//        label.posi
+        
+        addChild(spawnPositionNode)
+    }
 }
 
 extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
+//        if contact.collisionImpulse > 500 {
+            // Do something for high impact
+//        }
+
+        // This isn't correct, but it works.
         let dotBody = contact.bodyA.categoryBitMask > contact.bodyB.categoryBitMask ? contact.bodyA : contact.bodyB
         
+        // This is working, but doesn't make sense. dotBody isn't really the dot
         switch dotBody.categoryOfContact() {
         case .tombola:
-            let noteValueString = contact.bodyB.node?.name ?? ""
-            let noteValue = Int(noteValueString) ?? -1
-//            let midiValue = UInt7(min(127, noteValue))
-            noteCollection.insert(noteValue)
-        case .worldBoundary:
-            print("Hit world boundary")
-        default:
-            print("⚠️")
-            break
+            guard contact.collisionImpulse > 1.0 else { return }
+            if let noteDotNode = contact.bodyB.node as? NoteDot {
+                noteCollection.insert(noteDotNode.noteValue)
+            } else {
+                print("⚠️")
+            }
+        default: // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
+            print("⚠️ default contact case")
+            let noteDot = noteDots.removeFirst(where: { $0.name == contact.bodyB.node?.name })
+            noteDot?.removeFromParent()
         }
     }
 }
 
-//extension CGPoint {
-//    
-//    func distance(from point: CGPoint) -> CGFloat {
-//        CGFloat(
-//            hypotf(Float(x - point.x), Float(y - point.y))
-//        )
-//    }
-//}
+extension Array {
+    
+    mutating func removeFirst(where predicate: (Element) throws -> Bool) rethrows -> Element? {
+        do {
+            if let firstIndex = try firstIndex(where: predicate) {
+                return self.remove(at: firstIndex)
+            } else {
+                return nil
+            }
+        }
+        catch {
+            throw error
+        }
+    }
+}
 
-enum PhysicsCategory: UInt32, CaseIterable {
+enum PhysicsCategory: CaseIterable {
     case dot, tombola, worldBoundary
+
+    var bitMask: UInt32 {
+        switch self {
+        case .dot:
+            0x1 << 0
+        case .tombola:
+            0x1 << 1
+        case .worldBoundary:
+            0x1 << 2
+        }
+    }
 }
 
 extension SKPhysicsBody {
     
     func categoryOfContact() -> PhysicsCategory? {
-        PhysicsCategory.allCases.first { categoryBitMask & $0.rawValue != 0 }
+        PhysicsCategory.allCases.first { categoryBitMask & $0.bitMask != 0 }
     }
 }
 

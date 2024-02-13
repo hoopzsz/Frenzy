@@ -121,7 +121,7 @@ struct PianoView: View {
                         let isBlackKey = blackKeyNumbers.contains(keyNumber)
                         if isBlackKey {
                             PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
-                                         color: Color.yellow,
+                                         color: Color.gray,
                                          cornerRadius: 8.0)
                             .background(
                                 GeometryReader { geometry in

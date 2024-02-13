@@ -74,7 +74,10 @@ final class MIDIHelper: ObservableObject {
 //                tag: Self.outputConnectionName
 //            )
             
-            try midiManager.addOutputConnection(to: .allInputs, tag: Self.outputConnectionName)
+            try midiManager.addOutputConnection(
+                to: .allInputs,
+                tag: Self.outputConnectionName
+            )
             
         } catch {
             print("Error creating MIDI output connection:", error.localizedDescription)
