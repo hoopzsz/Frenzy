@@ -12,6 +12,18 @@ import SpriteKit
 
 final class GameScene: SKScene, ObservableObject {
     
+    @Published var globalTintColor: Color = .orange {
+        didSet {
+            tombolaSegments.forEach {
+                $0.strokeColor = UIColor(globalTintColor)
+            }
+        }
+    }
+    
+    @Published var secondaryTintColor: Color = .gray
+    
+    @Published var tertiaryTintColor: Color = .white
+    
     var noteCollection: Set<Int> = []
     
     var noteFiringTimeWindow = 0.1
@@ -277,7 +289,7 @@ private extension GameScene {
             path.addLine(to: rotatedPoints.1)
             let segmentNode = SKShapeNode(path: path)
             segmentNode.lineWidth = 3.0
-            segmentNode.strokeColor = .orange
+            segmentNode.strokeColor = UIColor(globalTintColor)
             segmentNode.physicsBody = SKPhysicsBody(edgeFrom: rotatedPoints.0, to: rotatedPoints.1)
             segmentNode.physicsBody?.affectedByGravity = false
             segmentNode.physicsBody?.pinned = true

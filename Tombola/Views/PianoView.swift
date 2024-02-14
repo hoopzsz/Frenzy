@@ -58,33 +58,20 @@ struct PianoKeyView: View {
 struct PianoView: View {
     
     @State private var keyData: [PianoKeyPreferenceData] = []
-    @State var selectedKeys2: Set<Int> = []
+//    @State var selectedKeys2: Set<Int> = []
     @State var lastSelectedKey: Int = -1
 
     @Binding var keyPress: Int?
-    
     let startingKey: Int
     let numberOfKeys: Int
+    @Binding var whiteKeyColor: Color
+    @Binding var blackKeyColor: Color
     
     let blackKeyWidthRatio = 0.65
     let blackKeyHeightRatio = 0.6
     
     private let blackKeyNumbers = [1, 3, 6, 8, 10]
     
-//    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Set<Int>) {
-//        assert(!blackKeyNumbers.contains(startingKey % 12), "Starting key cannot be black")
-//        self.startingKey = startingKey
-//        self.numberOfKeys = numberOfKeys
-////        self.selectedKeys = selectedKeys
-//    }
-//    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Binding<Set<Int>>) {
-//    init(startingKey: Int, numberOfKeys: Int, selectedKeys: Set<Int>) {
-//        assert(!blackKeyNumbers.contains(startingKey % 12), "Starting key cannot be black")
-//        self.startingKey = startingKey
-//        self.numberOfKeys = numberOfKeys
-//        self.selectedKeys = selectedKeys
-//    }
-         
     var body: some View {
         ZStack {
             GeometryReader { geometry in
@@ -101,7 +88,7 @@ struct PianoView: View {
                             let keyNumber = index % 12
                             if !blackKeyNumbers.contains(keyNumber) {
                                 PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
-                                             color: Color.orange,
+                                             color: whiteKeyColor,
                                              cornerRadius: 8.0)
                                         .background(
                                             GeometryReader { geometry in
@@ -121,7 +108,7 @@ struct PianoView: View {
                         let isBlackKey = blackKeyNumbers.contains(keyNumber)
                         if isBlackKey {
                             PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
-                                         color: Color.gray,
+                                         color: blackKeyColor,
                                          cornerRadius: 8.0)
                             .background(
                                 GeometryReader { geometry in
@@ -197,7 +184,11 @@ struct PianoView: View {
 }
 
 #Preview {
-    PianoView(keyPress: .constant(nil), startingKey: 36, numberOfKeys: 12)
+    PianoView(keyPress: .constant(nil),
+              startingKey: 36,
+              numberOfKeys: 12,
+              whiteKeyColor: .constant(.orange),
+              blackKeyColor: .constant(.black))
 }
 
 extension Set {

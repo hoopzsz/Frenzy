@@ -16,7 +16,8 @@
 		65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E0F2B76088B001A6494 /* TombolaUITests.swift */; };
 		65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */; };
 		65519E212B760906001A6494 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E202B760906001A6494 /* GameScene.swift */; };
-		6567C3A82B79587A006BE857 /* Interstellar.metal in Sources */ = {isa = PBXBuildFile; fileRef = 6567C3A72B79587A006BE857 /* Interstellar.metal */; };
+		656841F92B7C318200AB93D5 /* SpawnPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841F82B7C318200AB93D5 /* SpawnPositionView.swift */; };
+		656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841FA2B7C318E00AB93D5 /* SettingsView.swift */; };
 		65D084012B7BDA49009238A0 /* TombolaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084002B7BDA49009238A0 /* TombolaState.swift */; };
 		65D084042B7BDA79009238A0 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084032B7BDA79009238A0 /* Math.swift */; };
 		65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084052B7BDA8D009238A0 /* Array+Extensions.swift */; };
@@ -64,7 +65,8 @@
 		65519E0F2B76088B001A6494 /* TombolaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITests.swift; sourceTree = "<group>"; };
 		65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITestsLaunchTests.swift; sourceTree = "<group>"; };
 		65519E202B760906001A6494 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
-		6567C3A72B79587A006BE857 /* Interstellar.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Interstellar.metal; sourceTree = "<group>"; };
+		656841F82B7C318200AB93D5 /* SpawnPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpawnPositionView.swift; sourceTree = "<group>"; };
+		656841FA2B7C318E00AB93D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		65D084002B7BDA49009238A0 /* TombolaState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaState.swift; sourceTree = "<group>"; };
 		65D084032B7BDA79009238A0 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		65D084052B7BDA8D009238A0 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -130,7 +132,6 @@
 		65519DF32B760889001A6494 /* Tombola */ = {
 			isa = PBXGroup;
 			children = (
-				6567C3A72B79587A006BE857 /* Interstellar.metal */,
 				65519DF42B760889001A6494 /* TombolaApp.swift */,
 				65D084002B7BDA49009238A0 /* TombolaState.swift */,
 				65D084022B7BDA58009238A0 /* Views */,
@@ -174,6 +175,8 @@
 			isa = PBXGroup;
 			children = (
 				65519DF62B760889001A6494 /* ContentView.swift */,
+				656841F82B7C318200AB93D5 /* SpawnPositionView.swift */,
+				656841FA2B7C318E00AB93D5 /* SettingsView.swift */,
 				65D084112B7BDCA6009238A0 /* Shake.swift */,
 				65D0840F2B7BDC84009238A0 /* DynamicStack.swift */,
 				65D0840D2B7BDC36009238A0 /* SliderView.swift */,
@@ -329,14 +332,15 @@
 				65D084082B7BDAAB009238A0 /* NoteDot.swift in Sources */,
 				65D0840A2B7BDBF3009238A0 /* NoteIndicatorView.swift in Sources */,
 				65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */,
+				656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */,
 				65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */,
 				65D084102B7BDC84009238A0 /* DynamicStack.swift in Sources */,
 				65D0840C2B7BDC18009238A0 /* GravityView.swift in Sources */,
 				65519E212B760906001A6494 /* GameScene.swift in Sources */,
 				65519DF72B760889001A6494 /* ContentView.swift in Sources */,
 				65519DF52B760889001A6494 /* TombolaApp.swift in Sources */,
+				656841F92B7C318200AB93D5 /* SpawnPositionView.swift in Sources */,
 				65D084122B7BDCA6009238A0 /* Shake.swift in Sources */,
-				6567C3A82B79587A006BE857 /* Interstellar.metal in Sources */,
 				653B75542B76B86D00247C3E /* PianoView.swift in Sources */,
 				65D084042B7BDA79009238A0 /* Math.swift in Sources */,
 			);

@@ -11,9 +11,11 @@ struct GravityView: View {
     
     @Binding var gravityX: CGFloat
     @Binding var gravityY: CGFloat
+    @Binding var strokeColor: Color
+    @Binding var indicatorColor: Color
     
     private let numberOfSides = 8
-        
+    
     var body: some View {
         let adjustedGravityX = (gravityX - 0.5)// * 5.0
         let adjustedGravityY = (gravityY - 0.5)// * 5.0
@@ -21,27 +23,15 @@ struct GravityView: View {
             VStack {
                 Spacer()
                 ZStack {
-//                    GeometryReader { geometry in
-                        GravityViewShape(numberOfSides: numberOfSides)
-                            .stroke(Color.gray, lineWidth: 0.5)
-                            .fill(.clear)
-                        
-//                        let offset = (gravityX, (gravityY - 0.5) * 5)
-                   
+                    GravityViewShape(numberOfSides: numberOfSides)
+                        .stroke(strokeColor, lineWidth: 0.5)
+                        .fill(.clear)
+                    
                     let offset = (adjustedGravityX, adjustedGravityY)
-//                        let frame = geometry.frame(in: .local)
-                        // Draw a path from the center to the circle
-//                        Path { path in
-//                            path.move(to: CGPoint(x: frame.midX, y: frame.midY))
-//                            path.addLine(to: CGPoint(x: offset.0, y: offset.1))
-//                        }
-//                        .stroke(Color.gray, lineWidth: 0.5)
-                        Circle()
-                            .frame(width: 2.0, height: 2.0)
-                            .offset(x: offset.0 * 15.0, y: offset.1 * 20.0) // Exagerate the visual appearance with the 20x multiplier
-                            .foregroundStyle(.orange)
-//                    }
-//                    .frame(width: 30, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
+                    Circle()
+                        .frame(width: 2.0, height: 2.0)
+                        .offset(x: offset.0 * 15.0, y: offset.1 * 20.0) // Exagerate the visual appearance with the 20x multiplier
+                        .foregroundStyle(indicatorColor)
                 }
                 .frame(width: 30, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             }
@@ -54,7 +44,7 @@ struct GravityView: View {
                     .font(.system(size: 8))
                     .multilineTextAlignment(.leading)
             }
-            .foregroundStyle(.gray)
+            .foregroundColor(strokeColor)
         }
     }
 }

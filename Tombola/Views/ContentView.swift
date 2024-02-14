@@ -22,11 +22,9 @@ private let normalSliderStep = 1.0
 struct ContentView: View {
     
     @StateObject var gameScene = GameScene()
-        
-    @State var presentSettings: Bool = false
-    
     @State var spawnViewSize: CGFloat = 1.0
-
+    @State var presentingSettings: Bool = false
+    
     var body: some View {
         NavigationStack {
             DynamicStack {
@@ -50,7 +48,10 @@ struct ContentView: View {
                         VStack {
                             Spacer()
                             HStack {
-                                GravityView(gravityX: $gameScene.gravityX, gravityY: $gameScene.gravityY)
+                                GravityView(gravityX: $gameScene.gravityX,
+                                            gravityY: $gameScene.gravityY,
+                                            strokeColor: $gameScene.secondaryTintColor,
+                                            indicatorColor: $gameScene.globalTintColor)
                                 Spacer()
                             }
                         }
@@ -59,12 +60,14 @@ struct ContentView: View {
                         NoteIndicatorView(startingNote: 0, 
                                           numberOfNotes: 127,
                                           notes: notesFromNodes($gameScene.noteDots.wrappedValue))
-                            .frame(width: geometry.size.width, height: geometry.size.height)
+                        .frame(width: geometry.size.width, height: geometry.size.height)
+//                        .frame(width: geometry.size.width - 16.0, height: geometry.size.height - 16.0)
                         
                         SpawnPositionView()
                             .scaleEffect(spawnViewSize)
-                            .animation(.easeInOut(duration: 0.3))
+                            .animation(.easeInOut, value: 0.2)
                             .position(gameScene.spawnPosition)
+                            .foregroundColor(gameScene.secondaryTintColor)
 
                     }
                     .aspectRatio(1.0, contentMode: .fit)
@@ -76,15 +79,22 @@ struct ContentView: View {
                             .disabled(gameScene.isMotionEnabled)
                         SliderView(value: $gameScene.mass, name: "???", range: massSliderRange, step: smallSliderStep)
                     }
+                    .foregroundStyle(gameScene.secondaryTintColor)
                     HStack {
                         SliderView(value: $gameScene.scale, name: "Scale", range: scaleSliderRange, step: smallSliderStep)
                         SliderView(value: $gameScene.rotationSpeed, name: "Torque", range: torqueSliderRange, step: smallSliderStep)
                     }
+                    .foregroundStyle(gameScene.secondaryTintColor)
                     HStack {
                         SliderView(value: $gameScene.segmentOffset, name: "Divergence", range: spreadSliderRange, step: normalSliderStep)
                         SliderView(value: $gameScene.numberOfSides, name: "Vertices", range: verticesSliderRange, step: normalSliderStep)
                     }
-                    PianoView(keyPress: $gameScene.keyPress, startingKey: 36, numberOfKeys: 12)
+                    .foregroundStyle(gameScene.secondaryTintColor)
+                    PianoView(keyPress: $gameScene.keyPress,
+                              startingKey: 36,
+                              numberOfKeys: 12,
+                              whiteKeyColor: $gameScene.globalTintColor,
+                              blackKeyColor: $gameScene.secondaryTintColor)
                         .aspectRatio(2.5, contentMode: .fit)
                 }
                 .padding(8.0)
@@ -103,12 +113,15 @@ struct ContentView: View {
                         }
                         Button("Settings", 
                                systemImage: "gearshape.fill") {
-                            self.presentSettings.toggle()
+                            presentingSettings.toggle()
                         }
+                       .sheet(isPresented: $presentingSettings) {
+                           SettingsView(globalTintColor: $gameScene.globalTintColor, secondaryTintColor: $gameScene.secondaryTintColor)
+                       }
                     }
                 }
             }
-            .tint(.orange)
+            .tint(gameScene.globalTintColor)
         }
         .onShake {
 //            gameScene.didShake.toggle()
@@ -133,36 +146,6 @@ struct ContentView: View {
     private func updateSize(_ size: CGSize) -> AnyView? {
         gameScene.size = size
         return nil
-    }
-}
-
-struct SpawnPositionShape: Shape {
-    
-    func path(in rect: CGRect) -> Path {
-        Path { path in
-            path.move(to: CGPoint(x: 0, y: rect.midY))
-            path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
-            path.move(to: CGPoint(x: rect.midX, y: 0))
-            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
-        }
-    }
-}
-
-struct SpawnPositionView: View {
-    
-    var body: some View {
-        ZStack {
-            SpawnPositionShape()
-                .stroke(Color.gray, lineWidth: 0.5)
-                .frame(width: 10, height: 10)
-            Text("spawn")
-                .font(.system(size: 9.0))
-                .italic()
-//                .fontWeight(.medium)
-                .foregroundColor(.gray)
-                .multilineTextAlignment(.leading)
-                .offset(x: 21.0, y: 0.5)
-        }
     }
 }
 

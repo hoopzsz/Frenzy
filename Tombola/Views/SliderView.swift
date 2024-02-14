@@ -20,7 +20,7 @@ struct SliderView: View {
             Text(name.uppercased())
                 .italic()
                 .fontWeight(.medium)
-                .foregroundColor(.gray)
+//                .foregroundColor(.gray)
                 .multilineTextAlignment(.leading)
                 .offset(y: -10.0)
             Slider(value: $value, in: range, step: step, onEditingChanged: { _ in })
