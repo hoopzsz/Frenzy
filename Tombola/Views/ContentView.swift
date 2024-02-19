@@ -10,8 +10,8 @@ import SwiftUI
 import SpriteKit
 
 private let gravitySliderRange: ClosedRange<CGFloat> = 0.0...1.0
-private let noteLengthRange: ClosedRange<CGFloat> = 0.01...1.0
-private let scaleSliderRange: ClosedRange<CGFloat> = 0.1...1.2
+private let noteLengthRange: ClosedRange<CGFloat> = 0.1...1.0
+private let scaleSliderRange: ClosedRange<CGFloat> = 0.1...1.0
 private let torqueSliderRange: ClosedRange<CGFloat> = 0.0...10.0
 private let spreadSliderRange: ClosedRange<CGFloat> = 0.0...180.0
 private let verticesSliderRange: ClosedRange<CGFloat> = 2.0...13.0
@@ -25,7 +25,6 @@ struct ContentView: View {
     @State var spawnViewSize: CGFloat = 1.0
     @State var presentingSettings: Bool = false
     @State var isKeyboardVisible = true
-    
     @State var keyboardOffset: CGFloat = 0.0
     
     var body: some View {
@@ -72,47 +71,25 @@ struct ContentView: View {
                             .foregroundColor(gameScene.secondaryTintColor)
 
                     }
-                    .aspectRatio(1.0, contentMode: .fit)
+//                    .aspectRatio(1.0, contentMode: .fit)
                     .coordinateSpace(name: "GameScene")
                 }
+                
                 VStack {
                     Spacer()
-                    HStack {
-                        SliderView(value: $gameScene.gravityY, name: "Gravity", range: gravitySliderRange, step: smallSliderStep)
-                            .disabled(gameScene.isMotionEnabled)
-                        SliderView(value: $gameScene.noteLength, name: "Note Length", range: noteLengthRange, step: smallSliderStep)
-                    }
-                    .foregroundStyle(gameScene.secondaryTintColor)
-                    HStack {
-                        SliderView(value: $gameScene.scale, name: "Scale", range: scaleSliderRange, step: smallSliderStep)
-                        SliderView(value: $gameScene.rotationSpeed, name: "Torque", range: torqueSliderRange, step: smallSliderStep)
-                    }
-                    .foregroundStyle(gameScene.secondaryTintColor)
-                    HStack {
-                        SliderView(value: $gameScene.segmentOffset, name: "Diffusion", range: spreadSliderRange, step: normalSliderStep)
-                        SliderView(value: $gameScene.numberOfSides, name: "Vertices", range: verticesSliderRange, step: normalSliderStep)
-                    }
-                    .foregroundStyle(gameScene.secondaryTintColor)
+                    ControlsView(gravityY: $gameScene.gravityY,
+                                 noteLength: $gameScene.noteLength,
+                                 scale: $gameScene.scale,
+                                 rotationSpeed: $gameScene.rotationSpeed,
+                                 segmentOffset: $gameScene.segmentOffset,
+                                 numberOfSides: $gameScene.numberOfSides,
+                                 isKeyboardVisible: $isKeyboardVisible,
+                                 isMotionEnabled: $gameScene.isMotionEnabled,
+                                 tintColor: gameScene.secondaryTintColor)
+//                    .padding(8.0)
                     if isKeyboardVisible {
-                        GeometryReader { geometry in
-                            VStack {
-//                                Spacer()
-                                ScrollView(.horizontal, showsIndicators: true) {
-                                    PianoView(keyPress: $gameScene.keyPress,
-                                              startingKey: 0,
-                                              numberOfKeys: 108,
-                                              whiteKeyColor: $gameScene.globalTintColor,
-                                              blackKeyColor: $gameScene.secondaryTintColor)
-                                    .frame(width: geometry.size.width * 9.0, height: 150)
-                                    .offset(x: self.keyboardOffset * -1.0)
-//                                    .aspectRatio(, contentMode: .fit)
-                                }
-                                Slider(value: $keyboardOffset, in: 0.0...(max(1.0, geometry.size.width * 8.0)), step: 1.0)
-                            }
-//                            .onAppear {
-//                                keyboardOffset = geometry.size.width * 2.0
-//                            }
-                        }
+                        SlidableKeyboardView(keyboardOffset: $keyboardOffset, keyPress: $gameScene.keyPress, globalTintColor: $gameScene.globalTintColor, secondaryTintColor: $gameScene.secondaryTintColor)
+//                            .padding(EdgeInsets(top: 0.0, leading: 8.0, bottom: 0.0, trailing: 0.0))
                     }
                 }
                 .padding(8.0)
@@ -175,4 +152,68 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
+}
+
+struct SlidableKeyboardView: View {
+    
+    @Binding var keyboardOffset: CGFloat
+    @Binding var keyPress: Int?
+    @Binding var globalTintColor: Color
+    @Binding var secondaryTintColor: Color
+    
+    var body: some View {
+        GeometryReader { geometry in
+            LazyVStack {
+//                                                Spacer()
+//                ScrollView(.horizontal, showsIndicators: true) {
+                LazyHStack {
+                    PianoView(keyPress: $keyPress,
+                              startingKey: 0,
+                              numberOfKeys: 108,
+                              whiteKeyColor: $globalTintColor,
+                              blackKeyColor: $secondaryTintColor)
+                    .frame(width: geometry.size.width * 9.0, height: 150)
+                    .offset(x: self.keyboardOffset * -1.0)
+                    //                                    .aspectRatio(, contentMode: .fit)
+                }
+                let min = geometry.size.width * -4.0
+                Slider(value: $keyboardOffset, in: min...(max(1.0, geometry.size.width * 4.0)), step: 1.0)
+//                Slider(value: $keyboardOffset, in: 0.0...(max(1.0, geometry.size.width * 8.0)), step: 1.0)
+//                    .frame(width: geometry.size.width)
+            }
+        }
+    }
+}
+
+struct ControlsView: View {
+    
+    @Binding var gravityY: CGFloat
+    @Binding var noteLength: CGFloat
+    @Binding var scale: CGFloat
+    @Binding var rotationSpeed: CGFloat
+    @Binding var segmentOffset: CGFloat
+    @Binding var numberOfSides: CGFloat
+    @Binding var isKeyboardVisible: Bool
+    @Binding var isMotionEnabled: Bool
+    
+    let tintColor: Color
+    
+    var body: some View {
+        HStack {
+            SliderView(value: $gravityY, name: "Gravity", range: gravitySliderRange, step: smallSliderStep)
+                .disabled(isMotionEnabled)
+            SliderView(value: $noteLength, name: "Note Length", range: noteLengthRange, step: smallSliderStep)
+        }
+        .foregroundStyle(tintColor)
+        HStack {
+            SliderView(value: $scale, name: "Scale", range: scaleSliderRange, step: smallSliderStep)
+            SliderView(value: $rotationSpeed, name: "Torque", range: torqueSliderRange, step: smallSliderStep)
+        }
+        .foregroundStyle(tintColor)
+        HStack {
+            SliderView(value: $segmentOffset, name: "Diffusion", range: spreadSliderRange, step: normalSliderStep)
+            SliderView(value: $numberOfSides, name: "Vertices", range: verticesSliderRange, step: 1.0)
+        }
+        .foregroundStyle(tintColor)
+    }
 }

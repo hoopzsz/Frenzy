@@ -25,11 +25,11 @@ final class NoteDot: SKShapeNode {
         strokeColor = color
         physicsBody = SKPhysicsBody(circleOfRadius: radius)
         physicsBody?.mass = mass
-        physicsBody?.density = 0
-        physicsBody?.friction = mass
+        physicsBody?.density = mass
+        physicsBody?.friction = 0
         physicsBody?.restitution = 1
-        physicsBody?.linearDamping = mass
-        physicsBody?.angularDamping = mass
+        physicsBody?.linearDamping = 0
+        physicsBody?.angularDamping = 0
         physicsBody?.allowsRotation = true
         physicsBody?.usesPreciseCollisionDetection = true
         

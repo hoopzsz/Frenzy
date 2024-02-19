@@ -88,7 +88,7 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    @Published var noteLength: CGFloat = 0.1
+    @Published var noteLength: CGFloat = 0.5
     
     var keyPress: Int? {
         didSet {
@@ -232,13 +232,13 @@ final class GameScene: SKScene, ObservableObject {
         switch cc.controller.number {
         case 13: // Gravity
             guard isMotionEnabled == false else { return }
-            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 1.0)
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 1.0)
             gravityY = normalizedValue
         case 14: // Note length
-            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.01, newMax: 1.0)
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.1, newMax: 1.0)
             noteLength = normalizedValue
         case 15: // Scale
-            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.1, newMax: 1.2)
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.1, newMax: 1.0)
             scale = normalizedValue
         case 16: // Torque
             let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
@@ -247,7 +247,7 @@ final class GameScene: SKScene, ObservableObject {
             let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 180.0)
             segmentOffset = normalizedValue
         case 18: // Vertices
-            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 2.0, newMax: 13.0)
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 2.0, newMax: 13.0)
             numberOfSides = normalizedValue
         default:
             break
@@ -267,7 +267,7 @@ final class GameScene: SKScene, ObservableObject {
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
-        let noteDot = NoteDot(radius: 8.0, noteValue: noteValue, mass: 1.0)
+        let noteDot = NoteDot(radius: 8.0, noteValue: noteValue, mass: 0.0)
         let viewFrame = view?.frame
         // We have to do some math here to convert from SwiftUI's upper-left coordinate space
         // To SpriteKit's bottom-left coordinate space

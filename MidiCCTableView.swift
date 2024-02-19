@@ -16,7 +16,7 @@ struct MidiCCRow: Identifiable, Hashable {
 enum MidiCC: String, CaseIterable {
     
     case gravity
-    case unknown
+    case noteLength
     case scale
     case torque
     case divergence
@@ -26,7 +26,7 @@ enum MidiCC: String, CaseIterable {
         switch self {
         case .gravity:
             13
-        case .unknown:
+        case .noteLength:
             14
         case .scale:
             15
