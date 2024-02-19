@@ -19,7 +19,7 @@ enum MidiCC: String, CaseIterable {
     case noteLength
     case scale
     case torque
-    case divergence
+    case diffusion
     case vertices
     
     var cc: Int {
@@ -32,7 +32,7 @@ enum MidiCC: String, CaseIterable {
             15
         case .torque:
             16
-        case .divergence:
+        case .diffusion:
             17
         case .vertices:
             18
@@ -52,9 +52,13 @@ struct MidiCCTableView: View {
         VStack {
             ForEach(MidiCC.allCases, id: \.self) { cc in
                 HStack {
-                    Text("\(cc.rawValue.capitalized)")
-                    Text("...")
-                    Text("\(cc.cc)")
+                    Text("\(cc.cc):")
+                        .bold()
+                    let wording = cc.cc == 14 ? "Note length" : cc.rawValue.capitalized
+                    Text(wording)
+                        .italic()
+//                    Text("...")
+                    
                     Spacer()
                 }
             }
