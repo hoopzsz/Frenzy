@@ -32,26 +32,48 @@ struct PianoKeyView: View {
     @Binding var isPressed: Bool
     let color: Color
     let cornerRadius: CGFloat
+    let note: Int
 
     var body: some View {
-        RoundedRectangle(cornerSize: .init(width: cornerRadius, height: cornerRadius))
-            .strokeBorder(color, lineWidth: 1.0)
-            .background(backgroundColor)
-            .clipShape(RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius)))
-            .overlay(
-                RoundedRectangle(cornerRadius: cornerRadius - 4.0)
-                    .strokeBorder(isPressed ? .white : color, lineWidth: isPressed ? 1.0 : 0.5)
-                    .padding(innerStrokeDistance)
-            )
-            .zIndex(isPressed ? 1000 : 10)
-            .padding(1.0)
-            .scaleEffect(CGSize(width: 1.0, height: scale))
-            .onChange(of: isPressed, initial: false) {
-                withAnimation(.easeInOut(duration: 0.07)) {
-                    backgroundColor = isPressed ? color : .black
-                    scale = isPressed ? 0.98 : 1.0
+        ZStack {
+            RoundedRectangle(cornerSize: .init(width: cornerRadius, height: cornerRadius))
+                .strokeBorder(color, lineWidth: 1.0)
+                .background(
+                    ZStack {
+                        backgroundColor
+                        if note == 0 || note % 12 == 0 {
+                            VStack {
+                                Spacer()
+                                HStack {
+                                    Text("C\((note+1)/12)")
+                                        .italic()
+                                        .fontWeight(.medium)
+                                        .multilineTextAlignment(.leading)
+                                        .foregroundStyle(.white)
+                                        .padding(8)
+                                    Spacer()
+                                }
+                            }
+                        }
+                    }
+                )
+                .clipShape(RoundedRectangle(cornerSize: CGSize(width: cornerRadius, height: cornerRadius)))
+                .overlay(
+                    RoundedRectangle(cornerRadius: cornerRadius - 4.0)
+                        .strokeBorder(isPressed ? .white : color, lineWidth: isPressed ? 1.0 : 0.5)
+                        .padding(innerStrokeDistance)
+                )
+                .zIndex(isPressed ? 1000 : 10)
+                .padding(1.0)
+                .scaleEffect(CGSize(width: 1.0, height: scale))
+                .onChange(of: isPressed, initial: false) {
+                    withAnimation(.easeInOut(duration: 0.07)) {
+                        backgroundColor = isPressed ? color : .black
+                        scale = isPressed ? 0.98 : 1.0
+                    }
                 }
-            }
+                .sensoryFeedback(.impact, trigger: isPressed)
+        }
     }
 }
 
@@ -89,7 +111,8 @@ struct PianoView: View {
                             if !blackKeyNumbers.contains(keyNumber) {
                                 PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
                                              color: whiteKeyColor,
-                                             cornerRadius: 8.0)
+                                             cornerRadius: 8.0, 
+                                             note: index)
                                         .background(
                                             GeometryReader { geometry in
                                                 Rectangle()
@@ -98,7 +121,6 @@ struct PianoView: View {
                                                                 value: [PianoKeyPreferenceData(index: index, bounds: geometry.frame(in: .named("PianoSpace")))])
                                             }
                                         )
-//                                        .simultaneousGesture(TapGesture().onEnded { selectedKeys.toggle(index) })
                             }
                         }
                     }
@@ -109,7 +131,8 @@ struct PianoView: View {
                         if isBlackKey {
                             PianoKeyView(isPressed: .init(get: { keyPress == index }, set: { _ in }),
                                          color: blackKeyColor,
-                                         cornerRadius: 8.0)
+                                         cornerRadius: 8.0,
+                                         note: index)
                             .background(
                                 GeometryReader { geometry in
                                     Rectangle()
@@ -188,17 +211,6 @@ struct PianoView: View {
               startingKey: 36,
               numberOfKeys: 12,
               whiteKeyColor: .constant(.orange),
-              blackKeyColor: .constant(.black))
+              blackKeyColor: .constant(.gray))
 }
 
-extension Set {
-    
-    /// Adds an element to the Set if ithe Set does not already have it. Otherwise removes the value from the Set.
-    mutating func toggle(_ element: Set.Element) {
-        if contains(element) {
-            remove(element)
-        } else {
-            insert(element)
-        }
-    }
-}

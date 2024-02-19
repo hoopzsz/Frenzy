@@ -10,8 +10,8 @@ import SwiftUI
 import SpriteKit
 
 private let gravitySliderRange: ClosedRange<CGFloat> = 0.0...1.0
-private let massSliderRange: ClosedRange<CGFloat> = 0.0...1.0
-private let scaleSliderRange: ClosedRange<CGFloat> = 0.1...1.5
+private let noteLengthRange: ClosedRange<CGFloat> = 0.01...1.0
+private let scaleSliderRange: ClosedRange<CGFloat> = 0.1...1.2
 private let torqueSliderRange: ClosedRange<CGFloat> = 0.0...10.0
 private let spreadSliderRange: ClosedRange<CGFloat> = 0.0...180.0
 private let verticesSliderRange: ClosedRange<CGFloat> = 2.0...13.0
@@ -24,6 +24,9 @@ struct ContentView: View {
     @StateObject var gameScene = GameScene()
     @State var spawnViewSize: CGFloat = 1.0
     @State var presentingSettings: Bool = false
+    @State var isKeyboardVisible = true
+    
+    @State var keyboardOffset: CGFloat = 0.0
     
     var body: some View {
         NavigationStack {
@@ -61,7 +64,6 @@ struct ContentView: View {
                                           numberOfNotes: 127,
                                           notes: notesFromNodes($gameScene.noteDots.wrappedValue))
                         .frame(width: geometry.size.width, height: geometry.size.height)
-//                        .frame(width: geometry.size.width - 16.0, height: geometry.size.height - 16.0)
                         
                         SpawnPositionView()
                             .scaleEffect(spawnViewSize)
@@ -74,10 +76,11 @@ struct ContentView: View {
                     .coordinateSpace(name: "GameScene")
                 }
                 VStack {
+                    Spacer()
                     HStack {
                         SliderView(value: $gameScene.gravityY, name: "Gravity", range: gravitySliderRange, step: smallSliderStep)
                             .disabled(gameScene.isMotionEnabled)
-                        SliderView(value: $gameScene.mass, name: "???", range: massSliderRange, step: smallSliderStep)
+                        SliderView(value: $gameScene.noteLength, name: "Note Length", range: noteLengthRange, step: smallSliderStep)
                     }
                     .foregroundStyle(gameScene.secondaryTintColor)
                     HStack {
@@ -86,16 +89,31 @@ struct ContentView: View {
                     }
                     .foregroundStyle(gameScene.secondaryTintColor)
                     HStack {
-                        SliderView(value: $gameScene.segmentOffset, name: "Divergence", range: spreadSliderRange, step: normalSliderStep)
+                        SliderView(value: $gameScene.segmentOffset, name: "Diffusion", range: spreadSliderRange, step: normalSliderStep)
                         SliderView(value: $gameScene.numberOfSides, name: "Vertices", range: verticesSliderRange, step: normalSliderStep)
                     }
                     .foregroundStyle(gameScene.secondaryTintColor)
-                    PianoView(keyPress: $gameScene.keyPress,
-                              startingKey: 36,
-                              numberOfKeys: 12,
-                              whiteKeyColor: $gameScene.globalTintColor,
-                              blackKeyColor: $gameScene.secondaryTintColor)
-                        .aspectRatio(2.5, contentMode: .fit)
+                    if isKeyboardVisible {
+                        GeometryReader { geometry in
+                            VStack {
+//                                Spacer()
+                                ScrollView(.horizontal, showsIndicators: true) {
+                                    PianoView(keyPress: $gameScene.keyPress,
+                                              startingKey: 0,
+                                              numberOfKeys: 108,
+                                              whiteKeyColor: $gameScene.globalTintColor,
+                                              blackKeyColor: $gameScene.secondaryTintColor)
+                                    .frame(width: geometry.size.width * 9.0, height: 150)
+                                    .offset(x: self.keyboardOffset * -1.0)
+//                                    .aspectRatio(, contentMode: .fit)
+                                }
+                                Slider(value: $keyboardOffset, in: 0.0...(max(1.0, geometry.size.width * 8.0)), step: 1.0)
+                            }
+//                            .onAppear {
+//                                keyboardOffset = geometry.size.width * 2.0
+//                            }
+                        }
+                    }
                 }
                 .padding(8.0)
             }
@@ -107,16 +125,22 @@ struct ContentView: View {
                                systemImage: gameScene.isMotionEnabled ? "m.square.fill" : "m.square") {
                             gameScene.isMotionEnabled.toggle()
                         }
-                        Button("Audio",
-                               systemImage: gameScene.isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle") {
-                            gameScene.isInternalSoundEnabled.toggle()
-                        }
+//                        Button("Audio",
+//                               systemImage: gameScene.isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle") {
+//                            gameScene.isInternalSoundEnabled.toggle()
+//                        }
                         Button("Settings", 
                                systemImage: "gearshape.fill") {
                             presentingSettings.toggle()
                         }
                        .sheet(isPresented: $presentingSettings) {
-                           SettingsView(globalTintColor: $gameScene.globalTintColor, secondaryTintColor: $gameScene.secondaryTintColor)
+                           SettingsView(midiChannelOutput: $gameScene.midiChannelOutput,
+                                        midiChannelInput: $gameScene.midiChannelInput,
+                                        isVelocityFixed: $gameScene.isVelocityFixed,
+                                        globalTintColor: $gameScene.globalTintColor,
+                                        secondaryTintColor: $gameScene.secondaryTintColor,
+                                        isKeyboardVisible: $isKeyboardVisible,
+                                        collisionSensitiviy: $gameScene.collisionSensitivity)
                        }
                     }
                 }

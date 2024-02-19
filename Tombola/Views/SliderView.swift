@@ -20,10 +20,13 @@ struct SliderView: View {
             Text(name.uppercased())
                 .italic()
                 .fontWeight(.medium)
-//                .foregroundColor(.gray)
                 .multilineTextAlignment(.leading)
                 .offset(y: -10.0)
             Slider(value: $value, in: range, step: step, onEditingChanged: { _ in })
         }
     }
+}
+
+#Preview {
+    SliderView(value: .constant(0.1), name: "Divergence", range: 0.0...1.0, step: 0.01)
 }

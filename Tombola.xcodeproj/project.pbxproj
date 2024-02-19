@@ -18,6 +18,8 @@
 		65519E212B760906001A6494 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E202B760906001A6494 /* GameScene.swift */; };
 		656841F92B7C318200AB93D5 /* SpawnPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841F82B7C318200AB93D5 /* SpawnPositionView.swift */; };
 		656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841FA2B7C318E00AB93D5 /* SettingsView.swift */; };
+		659E98602B808CE000386240 /* MidiCCTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E985F2B808CE000386240 /* MidiCCTableView.swift */; };
+		659E98622B8091C200386240 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E98612B8091C200386240 /* AboutView.swift */; };
 		65D084012B7BDA49009238A0 /* TombolaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084002B7BDA49009238A0 /* TombolaState.swift */; };
 		65D084042B7BDA79009238A0 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084032B7BDA79009238A0 /* Math.swift */; };
 		65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084052B7BDA8D009238A0 /* Array+Extensions.swift */; };
@@ -67,6 +69,8 @@
 		65519E202B760906001A6494 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		656841F82B7C318200AB93D5 /* SpawnPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpawnPositionView.swift; sourceTree = "<group>"; };
 		656841FA2B7C318E00AB93D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		659E985F2B808CE000386240 /* MidiCCTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiCCTableView.swift; sourceTree = "<group>"; };
+		659E98612B8091C200386240 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
 		65D084002B7BDA49009238A0 /* TombolaState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaState.swift; sourceTree = "<group>"; };
 		65D084032B7BDA79009238A0 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		65D084052B7BDA8D009238A0 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
@@ -112,6 +116,7 @@
 		65519DE82B760889001A6494 = {
 			isa = PBXGroup;
 			children = (
+				659E985F2B808CE000386240 /* MidiCCTableView.swift */,
 				65519DF32B760889001A6494 /* Tombola */,
 				65519E042B76088B001A6494 /* TombolaTests */,
 				65519E0E2B76088B001A6494 /* TombolaUITests */,
@@ -177,6 +182,7 @@
 				65519DF62B760889001A6494 /* ContentView.swift */,
 				656841F82B7C318200AB93D5 /* SpawnPositionView.swift */,
 				656841FA2B7C318E00AB93D5 /* SettingsView.swift */,
+				659E98612B8091C200386240 /* AboutView.swift */,
 				65D084112B7BDCA6009238A0 /* Shake.swift */,
 				65D0840F2B7BDC84009238A0 /* DynamicStack.swift */,
 				65D0840D2B7BDC36009238A0 /* SliderView.swift */,
@@ -331,9 +337,11 @@
 				65D0840E2B7BDC36009238A0 /* SliderView.swift in Sources */,
 				65D084082B7BDAAB009238A0 /* NoteDot.swift in Sources */,
 				65D0840A2B7BDBF3009238A0 /* NoteIndicatorView.swift in Sources */,
+				659E98622B8091C200386240 /* AboutView.swift in Sources */,
 				65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */,
 				656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */,
 				65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */,
+				659E98602B808CE000386240 /* MidiCCTableView.swift in Sources */,
 				65D084102B7BDC84009238A0 /* DynamicStack.swift in Sources */,
 				65D0840C2B7BDC18009238A0 /* GravityView.swift in Sources */,
 				65519E212B760906001A6494 /* GameScene.swift in Sources */,
@@ -503,17 +511,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
 				DEVELOPMENT_TEAM = 6W3D273VP2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Tombola uses Bluetooth to wirelessly connect MIDI";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -521,6 +533,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.Tombola;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -532,17 +545,21 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
 				DEVELOPMENT_TEAM = 6W3D273VP2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.music";
+				INFOPLIST_KEY_NSBluetoothAlwaysUsageDescription = "Tombola uses Bluetooth to wirelessly connect MIDI";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPad = "UIInterfaceOrientationPortrait UIInterfaceOrientationPortraitUpsideDown UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
 				INFOPLIST_KEY_UISupportedInterfaceOrientations_iPhone = "UIInterfaceOrientationPortrait UIInterfaceOrientationLandscapeLeft UIInterfaceOrientationLandscapeRight";
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -550,6 +567,7 @@
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = ca.danielhooper.Tombola;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

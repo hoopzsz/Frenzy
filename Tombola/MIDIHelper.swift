@@ -28,10 +28,11 @@ final class MIDIHelper: ObservableObject {
         
         setupConnections()
     }
-    
-//    @Published var noteOnNumber: UInt7? = nil
-    
+        
     var didReceiveMIDIEvent: (MIDIEvent) -> Void = { _ in }
+    
+    var inputChannel: Int = 0
+    var outputChannel: UInt4 = 0
     
     // MARK: - Connections
     
@@ -46,31 +47,65 @@ final class MIDIHelper: ObservableObject {
             // on the iOS device once a user has clicked 'Enable' in Audio MIDI Setup on the Mac
             // to establish the USB audio/MIDI connection to the iOS device.
             
-            print("Creating MIDI input connection.")
-            try midiManager.addInputConnection(
-                to: .outputs(matching: [.name("IDAM MIDI Host")]),
-                tag: Self.inputConnectionName,
-                receiver: .events(options: [.bundleRPNAndNRPNDataEntryLSB, .filterActiveSensingAndClock], { [weak self] events, timestamp, outputEndpoint in
-                    if let event = events.first {
-                        self?.didReceiveMIDIEvent(event)
-                    }
-                })
-            )
-            
-            print("Creating MIDI output connection.")
-            try midiManager.addOutputConnection(
-                to: .inputs(matching: [.name("IDAM MIDI Host")]),
-                tag: Self.outputConnectionName
-            )
+//            print("Creating MIDI input connection.")
+//            try midiManager.addInputConnection(
+//                to: .outputs(matching: [.name("IDAM MIDI Host")]),
+//                tag: Self.inputConnectionName,
+//                receiver: .events(options: [.bundleRPNAndNRPNDataEntryLSB, .filterActiveSensingAndClock], { [weak self] events, timestamp, outputEndpoint in
+//                    events
+//                        .compactMap { $0 }
+//                        .forEach {
+//                            self?.didReceiveMIDIEvent($0)
+//                        }
+//                })
+//            )
 //            
+//            print("Creating MIDI output connection.")
 //            try midiManager.addOutputConnection(
 //                to: .allInputs,
 //                tag: Self.outputConnectionName
 //            )
             
-        } catch {
-            print("Error creating MIDI output connection:", error.localizedDescription)
-        }
+            do {
+                try midiManager.addInputConnection(
+                    to: .allOutputs, // auto-connect to all outputs that may appear
+                    tag: "Listener",
+                    filter: .owned(), // don't allow self-created virtual endpoints
+                    receiver: .events(options: [.bundleRPNAndNRPNDataEntryLSB, .filterActiveSensingAndClock], { [weak self] events, timestamp, outputEndpoint in
+                        events
+                            .compactMap { $0 }
+                            .filter { ($0.channel ?? 1) == (self?.inputChannel ?? -1) }
+                            .forEach {
+                                self?.didReceiveMIDIEvent($0)
+                            }
+                    })
+                )
+            } catch {
+                print(
+                    "Error setting up managed MIDI all-listener connection:",
+                    error.localizedDescription
+                )
+            }
+            
+            // set up a broadcaster that can send events to all MIDI inputs
+            
+            do {
+                try midiManager.addOutputConnection(
+                    to: .allInputs, // auto-connect to all inputs that may appear
+                    tag: "Broadcaster",
+                    filter: .owned() // don't allow self-created virtual endpoints
+                )
+            } catch {
+                print(
+                    "Error setting up managed MIDI all-listener connection:",
+                    error.localizedDescription
+                )
+            }
+            
+        } 
+//        catch {
+//            print("Error creating MIDI output connection:", error.localizedDescription)
+//        }
     }
     
     /// Convenience accessor for created MIDI Output Connection.
@@ -78,21 +113,30 @@ final class MIDIHelper: ObservableObject {
         midiManager?.managedOutputConnections[Self.outputConnectionName]
     }
     
-    func sendNoteOn(_ note: UInt7) {
-//        print("Sending note ON (\(note))")
-        try? outputConnection?.send(event: .noteOn(
-            note,
-            velocity: .midi1(127),
-            channel: 0
-        ))
+    func sendNoteOn(_ note: UInt7, velocity: Int, noteOffDelay: Double = 0.1) {
+        let conn = midiManager?.managedOutputConnections["Broadcaster"]
+        do {
+            let v = min(127, velocity)
+            print("velocity: \(v)")
+            try conn?.send(event: .noteOn(note, velocity: .midi1(UInt7(v)), channel: outputChannel))
+        } catch {
+            print("⚠️ \(error.localizedDescription)")
+        }
+        
+        if noteOffDelay > 0.0 {
+            DispatchQueue.main.asyncAfter(deadline: .now() + noteOffDelay) { [weak self] in
+                self?.sendNoteOff(note)
+            }
+        }
     }
     
     func sendNoteOff(_ note: UInt7) {
-//        print("Sending note OFF (\(note))")
+        let conn = midiManager?.managedOutputConnections["Broadcaster"] ?? outputConnection
+
         try? outputConnection?.send(event: .noteOff(
             note,
-            velocity: .midi1(0),
-            channel: 0
+            velocity: .midi1(127),
+            channel: outputChannel
         ))
     }
     

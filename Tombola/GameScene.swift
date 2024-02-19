@@ -12,6 +12,20 @@ import SpriteKit
 
 final class GameScene: SKScene, ObservableObject {
     
+    @Published var midiChannelOutput: Int = 0 {
+        didSet {
+            midiHelper.outputChannel = UInt4(midiChannelOutput)
+        }
+    }
+    
+    @Published var midiChannelInput: Int = 0 {
+        didSet {
+            midiHelper.inputChannel = midiChannelInput
+        }
+    }
+    
+    @Published var isVelocityFixed: Bool = true
+    
     @Published var globalTintColor: Color = .orange {
         didSet {
             tombolaSegments.forEach {
@@ -24,9 +38,9 @@ final class GameScene: SKScene, ObservableObject {
     
     @Published var tertiaryTintColor: Color = .white
     
-    var noteCollection: Set<Int> = []
-    
-    var noteFiringTimeWindow = 0.1
+//    var noteCollection: Set<Int> = []
+    var notesToFire: [(Int, Int, CGFloat)] = []
+    var noteFiringTimeWindow = 0.05
     var previousTime: TimeInterval = .zero
     
     let bpm = 120.0
@@ -44,6 +58,8 @@ final class GameScene: SKScene, ObservableObject {
     }
     
     var isInternalSoundEnabled: Bool = false
+    
+    @Published var collisionSensitivity: CollisionSensitivity = .medium
     
     @Published var gravityX: CGFloat = 0.5 {
         didSet {
@@ -72,14 +88,7 @@ final class GameScene: SKScene, ObservableObject {
         }
     }
     
-    @Published var mass: CGFloat = 0.0 {
-        didSet {
-            noteDots.forEach {
-                $0.physicsBody?.linearDamping = mass
-                $0.physicsBody?.angularDamping = mass
-            }
-        }
-    }
+    @Published var noteLength: CGFloat = 0.1
     
     var keyPress: Int? {
         didSet {
@@ -123,9 +132,9 @@ final class GameScene: SKScene, ObservableObject {
     private let motionManager = CMMotionManager()
     
     private let midiManager = ObservableMIDIManager(
-        clientName: "TestAppMIDIManager",
-        model: "TestApp",
-        manufacturer: "MyCompany"
+        clientName: "FrenzyMIDIManager",
+        model: "FrenzyApp",
+        manufacturer: "Daniel Hooper"
     )
     
     private let midiHelper = MIDIHelper()
@@ -191,7 +200,8 @@ final class GameScene: SKScene, ObservableObject {
         // which may produce unpleasent sounding results
         if previousTime + noteFiringTimeWindow < currentTime {
             fireMidiEvents()
-            noteCollection = []
+//            noteCollection = []
+            notesToFire = []
             previousTime = currentTime
         }
         
@@ -209,10 +219,12 @@ final class GameScene: SKScene, ObservableObject {
     }
     
     private func fireMidiEvents() {
-        noteCollection
-            .forEach { [weak self] note in
-                self?.midiHelper.sendNoteOn(UInt7(note))
-            }
+        notesToFire.forEach { [weak self] (note, velocity, noteLength) in
+            self?.midiHelper.sendNoteOn(UInt7(note), velocity: velocity, noteOffDelay: noteLength)
+        }
+//        noteCollection.forEach { [weak self] note in
+//            self?.midiHelper.sendNoteOn(UInt7(note), velocity: 127, noteOffDelay: 0.2)
+//        }
     }
     
     private func receiveMidiCC(_ cc: MIDIEvent.CC) {
@@ -222,13 +234,13 @@ final class GameScene: SKScene, ObservableObject {
             guard isMotionEnabled == false else { return }
             let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 1.0)
             gravityY = normalizedValue
-        case 14: // Mass
-            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.0, newMax: 100.0)
-            mass = normalizedValue
+        case 14: // Note length
+            let normalizedValue = normalize(value: value, min: 0.0, max: 127.0, newMin: 0.01, newMax: 1.0)
+            noteLength = normalizedValue
         case 15: // Scale
-            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.2, newMax: 2.0)
+            let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.1, newMax: 1.2)
             scale = normalizedValue
-        case 16: // Torquex
+        case 16: // Torque
             let normalizedValue = normalize(value: value, min: 0.0, max: 4294967296, newMin: 0.0, newMax: 10.0)
             rotationSpeed = normalizedValue
         case 17: // Spread
@@ -255,7 +267,7 @@ final class GameScene: SKScene, ObservableObject {
 private extension GameScene {
 
     func makeNoteDot(_ noteValue: Int) {
-        let noteDot = NoteDot(radius: 5.0, noteValue: noteValue, mass: mass)
+        let noteDot = NoteDot(radius: 8.0, noteValue: noteValue, mass: 1.0)
         let viewFrame = view?.frame
         // We have to do some math here to convert from SwiftUI's upper-left coordinate space
         // To SpriteKit's bottom-left coordinate space
@@ -288,7 +300,8 @@ private extension GameScene {
             path.move(to: rotatedPoints.0)
             path.addLine(to: rotatedPoints.1)
             let segmentNode = SKShapeNode(path: path)
-            segmentNode.lineWidth = 3.0
+            segmentNode.lineWidth = 5.0
+            segmentNode.lineCap = .round
             segmentNode.strokeColor = UIColor(globalTintColor)
             segmentNode.physicsBody = SKPhysicsBody(edgeFrom: rotatedPoints.0, to: rotatedPoints.1)
             segmentNode.physicsBody?.affectedByGravity = false
@@ -314,24 +327,24 @@ private extension GameScene {
 extension GameScene: SKPhysicsContactDelegate {
     
     func didBegin(_ contact: SKPhysicsContact) {
-//        if contact.collisionImpulse > 500 {
-            // Do something for high impact
-//        }
-
+        let collisionImpulse = min(500, contact.collisionImpulse)
+        let velocity = Int(normalize(value: collisionImpulse, min: 0.0, max: 500.0, newMin: 0.0, newMax: 126.0))
+        
         // This isn't correct, but it works.
         let dotBody = contact.bodyA.categoryBitMask > contact.bodyB.categoryBitMask ? contact.bodyA : contact.bodyB
         
         // This is working, but doesn't make sense. dotBody isn't really the dot
         switch dotBody.categoryOfContact() {
         case .tombola:
-            guard contact.collisionImpulse > 1.0 else { return }
+            guard contact.collisionImpulse > collisionSensitivity.impactThreshold else { return }
             if let noteDotNode = contact.bodyB.node as? NoteDot {
-                noteCollection.insert(noteDotNode.noteValue)
-                if isInternalSoundEnabled {
-                    let freq = noteNumberToFrequency(noteDotNode.noteValue)
-                    let dur = cycleDurationInMilliseconds(forFrequency: freq)
-                    playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
-                }
+                notesToFire.append((noteDotNode.noteValue, isVelocityFixed ? 127 : velocity, noteLength))
+//                noteCollection.insert(noteDotNode.noteValue)
+//                if isInternalSoundEnabled {
+//                    let freq = noteNumberToFrequency(noteDotNode.noteValue)
+//                    let dur = cycleDurationInMilliseconds(forFrequency: freq)
+//                    playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
+//                }
             }
         // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
         default:

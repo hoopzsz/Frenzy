@@ -25,19 +25,20 @@ struct GravityView: View {
                 ZStack {
                     GravityViewShape(numberOfSides: numberOfSides)
                         .stroke(strokeColor, lineWidth: 0.5)
-                        .fill(.clear)
+                        .fill(Color.clear)
                     
                     let offset = (adjustedGravityX, adjustedGravityY)
                     Circle()
                         .frame(width: 2.0, height: 2.0)
-                        .offset(x: offset.0 * 15.0, y: offset.1 * 20.0) // Exagerate the visual appearance with the 20x multiplier
+                        // Exagerate the visual appearance with the 20x multiplier
+                        .offset(x: offset.0 * 15.0, y: offset.1 * 20.0)
                         .foregroundStyle(indicatorColor)
                 }
                 .frame(width: 30, height: 30, alignment: /*@START_MENU_TOKEN@*/.center/*@END_MENU_TOKEN@*/)
             }
             VStack {
                 Spacer()
-                /// Multiply each value by 2 so the values read from `-1.0...1.0`
+                // Multiply each value by 2 so the values read from `-1.0...1.0`
                 let x = String(format: "%.2f", adjustedGravityX * 2.0)
                 let y = String(format: "%.2f", adjustedGravityY * 2.0)
                 Text("x: \(x)\ny: \(y)")
