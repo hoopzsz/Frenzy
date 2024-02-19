@@ -202,7 +202,7 @@ struct ControlsView: View {
         HStack {
             SliderView(value: $gravityY, name: "Gravity", range: gravitySliderRange, step: smallSliderStep)
                 .disabled(isMotionEnabled)
-            SliderView(value: $noteLength, name: "Note Length", range: noteLengthRange, step: smallSliderStep)
+            SliderView(value: $noteLength, name: "Note length", range: noteLengthRange, step: smallSliderStep)
         }
         .foregroundStyle(tintColor)
         HStack {

@@ -21,7 +21,7 @@ struct SliderView: View {
                 .italic()
                 .fontWeight(.medium)
                 .multilineTextAlignment(.leading)
-                .offset(y: -10.0)
+                .offset(x: 1, y: -11.0)
             Slider(value: $value, in: range, step: step, onEditingChanged: { _ in })
         }
     }

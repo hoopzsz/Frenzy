@@ -51,6 +51,7 @@ struct PianoKeyView: View {
                                         .multilineTextAlignment(.leading)
                                         .foregroundStyle(.white)
                                         .padding(8)
+                                        .offset(y: 2)
                                     Spacer()
                                 }
                             }
