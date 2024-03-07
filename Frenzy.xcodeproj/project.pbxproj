@@ -286,7 +286,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Tombola" */;
+			buildConfigurationList = 65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Frenzy" */;
 			compatibilityVersion = "Xcode 14.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -610,7 +610,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tombola.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tombola";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Frenzy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Frenzy";
 			};
 			name = Debug;
 		};
@@ -630,7 +630,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Tombola.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Tombola";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Frenzy.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Frenzy";
 			};
 			name = Release;
 		};
@@ -673,7 +673,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Tombola" */ = {
+		65519DEC2B760889001A6494 /* Build configuration list for PBXProject "Frenzy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				65519E132B76088B001A6494 /* Debug */,
