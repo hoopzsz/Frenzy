@@ -7,20 +7,24 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		65279BBF2B996B41006FD15F /* ToneGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BBE2B996B41006FD15F /* ToneGenerator.swift */; };
+		65279BC12B996C14006FD15F /* CollisionSensitivity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BC02B996C14006FD15F /* CollisionSensitivity.swift */; };
+		65279BC32B996CC7006FD15F /* Set+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BC22B996CC7006FD15F /* Set+Extensions.swift */; };
+		65279BC62B99711D006FD15F /* PhysicsCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BC52B99711D006FD15F /* PhysicsCategory.swift */; };
+		65279BC82B997130006FD15F /* SKPhysicsBody+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BC72B997130006FD15F /* SKPhysicsBody+Extensions.swift */; };
+		65279BCA2B997952006FD15F /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BC92B997952006FD15F /* ControlsView.swift */; };
+		65279BCC2B99799C006FD15F /* SlidingKeyboardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BCB2B99799C006FD15F /* SlidingKeyboardView.swift */; };
+		65279BCE2B9979B8006FD15F /* FrenzyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65279BCD2B9979B8006FD15F /* FrenzyView.swift */; };
 		653B75542B76B86D00247C3E /* PianoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 653B75532B76B86D00247C3E /* PianoView.swift */; };
-		65519DF52B760889001A6494 /* TombolaApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF42B760889001A6494 /* TombolaApp.swift */; };
+		65519DF52B760889001A6494 /* FrenzyApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF42B760889001A6494 /* FrenzyApp.swift */; };
 		65519DF72B760889001A6494 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519DF62B760889001A6494 /* ContentView.swift */; };
 		65519DF92B76088A001A6494 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65519DF82B76088A001A6494 /* Assets.xcassets */; };
 		65519DFC2B76088A001A6494 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 65519DFB2B76088A001A6494 /* Preview Assets.xcassets */; };
-		65519E062B76088B001A6494 /* TombolaTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E052B76088B001A6494 /* TombolaTests.swift */; };
-		65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E0F2B76088B001A6494 /* TombolaUITests.swift */; };
-		65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */; };
 		65519E212B760906001A6494 /* GameScene.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65519E202B760906001A6494 /* GameScene.swift */; };
 		656841F92B7C318200AB93D5 /* SpawnPositionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841F82B7C318200AB93D5 /* SpawnPositionView.swift */; };
 		656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 656841FA2B7C318E00AB93D5 /* SettingsView.swift */; };
 		659E98602B808CE000386240 /* MidiCCTableView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E985F2B808CE000386240 /* MidiCCTableView.swift */; };
 		659E98622B8091C200386240 /* AboutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 659E98612B8091C200386240 /* AboutView.swift */; };
-		65D084012B7BDA49009238A0 /* TombolaState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084002B7BDA49009238A0 /* TombolaState.swift */; };
 		65D084042B7BDA79009238A0 /* Math.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084032B7BDA79009238A0 /* Math.swift */; };
 		65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084052B7BDA8D009238A0 /* Array+Extensions.swift */; };
 		65D084082B7BDAAB009238A0 /* NoteDot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084072B7BDAAB009238A0 /* NoteDot.swift */; };
@@ -29,6 +33,7 @@
 		65D0840E2B7BDC36009238A0 /* SliderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0840D2B7BDC36009238A0 /* SliderView.swift */; };
 		65D084102B7BDC84009238A0 /* DynamicStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D0840F2B7BDC84009238A0 /* DynamicStack.swift */; };
 		65D084122B7BDCA6009238A0 /* Shake.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65D084112B7BDCA6009238A0 /* Shake.swift */; };
+		65F510AE2B958A1500AD6CE0 /* TutorialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65F510AD2B958A1500AD6CE0 /* TutorialView.swift */; };
 		65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */; };
 		65FBFB132B76D84500E72FBA /* MIDIKit in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB122B76D84500E72FBA /* MIDIKit */; };
 		65FBFB152B76D84500E72FBA /* MIDIKitControlSurfaces in Frameworks */ = {isa = PBXBuildFile; productRef = 65FBFB142B76D84500E72FBA /* MIDIKitControlSurfaces */; };
@@ -55,23 +60,27 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		65279BBE2B996B41006FD15F /* ToneGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToneGenerator.swift; sourceTree = "<group>"; };
+		65279BC02B996C14006FD15F /* CollisionSensitivity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CollisionSensitivity.swift; sourceTree = "<group>"; };
+		65279BC22B996CC7006FD15F /* Set+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Set+Extensions.swift"; sourceTree = "<group>"; };
+		65279BC52B99711D006FD15F /* PhysicsCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhysicsCategory.swift; sourceTree = "<group>"; };
+		65279BC72B997130006FD15F /* SKPhysicsBody+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SKPhysicsBody+Extensions.swift"; sourceTree = "<group>"; };
+		65279BC92B997952006FD15F /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
+		65279BCB2B99799C006FD15F /* SlidingKeyboardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingKeyboardView.swift; sourceTree = "<group>"; };
+		65279BCD2B9979B8006FD15F /* FrenzyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrenzyView.swift; sourceTree = "<group>"; };
 		653B75532B76B86D00247C3E /* PianoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PianoView.swift; sourceTree = "<group>"; };
-		65519DF12B760889001A6494 /* Tombola.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Tombola.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		65519DF42B760889001A6494 /* TombolaApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaApp.swift; sourceTree = "<group>"; };
+		65519DF12B760889001A6494 /* Frenzy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Frenzy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		65519DF42B760889001A6494 /* FrenzyApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FrenzyApp.swift; sourceTree = "<group>"; };
 		65519DF62B760889001A6494 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		65519DF82B76088A001A6494 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		65519DFB2B76088A001A6494 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		65519E012B76088B001A6494 /* TombolaTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TombolaTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		65519E052B76088B001A6494 /* TombolaTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaTests.swift; sourceTree = "<group>"; };
-		65519E0B2B76088B001A6494 /* TombolaUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = TombolaUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		65519E0F2B76088B001A6494 /* TombolaUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITests.swift; sourceTree = "<group>"; };
-		65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		65519E012B76088B001A6494 /* FrenzyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FrenzyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		65519E0B2B76088B001A6494 /* FrenzyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FrenzyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		65519E202B760906001A6494 /* GameScene.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GameScene.swift; sourceTree = "<group>"; };
 		656841F82B7C318200AB93D5 /* SpawnPositionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpawnPositionView.swift; sourceTree = "<group>"; };
 		656841FA2B7C318E00AB93D5 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		659E985F2B808CE000386240 /* MidiCCTableView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MidiCCTableView.swift; sourceTree = "<group>"; };
 		659E98612B8091C200386240 /* AboutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutView.swift; sourceTree = "<group>"; };
-		65D084002B7BDA49009238A0 /* TombolaState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TombolaState.swift; sourceTree = "<group>"; };
 		65D084032B7BDA79009238A0 /* Math.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Math.swift; sourceTree = "<group>"; };
 		65D084052B7BDA8D009238A0 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		65D084072B7BDAAB009238A0 /* NoteDot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteDot.swift; sourceTree = "<group>"; };
@@ -80,6 +89,7 @@
 		65D0840D2B7BDC36009238A0 /* SliderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SliderView.swift; sourceTree = "<group>"; };
 		65D0840F2B7BDC84009238A0 /* DynamicStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicStack.swift; sourceTree = "<group>"; };
 		65D084112B7BDCA6009238A0 /* Shake.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shake.swift; sourceTree = "<group>"; };
+		65F510AD2B958A1500AD6CE0 /* TutorialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TutorialView.swift; sourceTree = "<group>"; };
 		65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MIDIHelper.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -113,13 +123,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		65279BC42B996CCE006FD15F /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				65279BC22B996CC7006FD15F /* Set+Extensions.swift */,
+				65279BC72B997130006FD15F /* SKPhysicsBody+Extensions.swift */,
+				65D084052B7BDA8D009238A0 /* Array+Extensions.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
 		65519DE82B760889001A6494 = {
 			isa = PBXGroup;
 			children = (
-				659E985F2B808CE000386240 /* MidiCCTableView.swift */,
-				65519DF32B760889001A6494 /* Tombola */,
-				65519E042B76088B001A6494 /* TombolaTests */,
-				65519E0E2B76088B001A6494 /* TombolaUITests */,
+				65279BCD2B9979B8006FD15F /* FrenzyView.swift */,
+				65279BCB2B99799C006FD15F /* SlidingKeyboardView.swift */,
+				65279BC92B997952006FD15F /* ControlsView.swift */,
+				65519DF32B760889001A6494 /* Frenzy */,
 				65519DF22B760889001A6494 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -127,28 +147,30 @@
 		65519DF22B760889001A6494 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				65519DF12B760889001A6494 /* Tombola.app */,
-				65519E012B76088B001A6494 /* TombolaTests.xctest */,
-				65519E0B2B76088B001A6494 /* TombolaUITests.xctest */,
+				65519DF12B760889001A6494 /* Frenzy.app */,
+				65519E012B76088B001A6494 /* FrenzyTests.xctest */,
+				65519E0B2B76088B001A6494 /* FrenzyUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		65519DF32B760889001A6494 /* Tombola */ = {
+		65519DF32B760889001A6494 /* Frenzy */ = {
 			isa = PBXGroup;
 			children = (
-				65519DF42B760889001A6494 /* TombolaApp.swift */,
-				65D084002B7BDA49009238A0 /* TombolaState.swift */,
-				65D084022B7BDA58009238A0 /* Views */,
+				65279BC02B996C14006FD15F /* CollisionSensitivity.swift */,
+				65519DF42B760889001A6494 /* FrenzyApp.swift */,
 				65519E202B760906001A6494 /* GameScene.swift */,
-				65D084072B7BDAAB009238A0 /* NoteDot.swift */,
+				65279BC52B99711D006FD15F /* PhysicsCategory.swift */,
 				65D084032B7BDA79009238A0 /* Math.swift */,
-				65D084052B7BDA8D009238A0 /* Array+Extensions.swift */,
 				65FBFB0F2B76D82700E72FBA /* MIDIHelper.swift */,
+				65D084072B7BDAAB009238A0 /* NoteDot.swift */,
+				65279BBE2B996B41006FD15F /* ToneGenerator.swift */,
+				65D084022B7BDA58009238A0 /* Views */,
+				65279BC42B996CCE006FD15F /* Extensions */,
 				65519DF82B76088A001A6494 /* Assets.xcassets */,
 				65519DFA2B76088A001A6494 /* Preview Content */,
 			);
-			path = Tombola;
+			path = Frenzy;
 			sourceTree = "<group>";
 		};
 		65519DFA2B76088A001A6494 /* Preview Content */ = {
@@ -159,26 +181,11 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
-		65519E042B76088B001A6494 /* TombolaTests */ = {
-			isa = PBXGroup;
-			children = (
-				65519E052B76088B001A6494 /* TombolaTests.swift */,
-			);
-			path = TombolaTests;
-			sourceTree = "<group>";
-		};
-		65519E0E2B76088B001A6494 /* TombolaUITests */ = {
-			isa = PBXGroup;
-			children = (
-				65519E0F2B76088B001A6494 /* TombolaUITests.swift */,
-				65519E112B76088B001A6494 /* TombolaUITestsLaunchTests.swift */,
-			);
-			path = TombolaUITests;
-			sourceTree = "<group>";
-		};
 		65D084022B7BDA58009238A0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				65F510AD2B958A1500AD6CE0 /* TutorialView.swift */,
+				659E985F2B808CE000386240 /* MidiCCTableView.swift */,
 				65519DF62B760889001A6494 /* ContentView.swift */,
 				656841F82B7C318200AB93D5 /* SpawnPositionView.swift */,
 				656841FA2B7C318E00AB93D5 /* SettingsView.swift */,
@@ -196,9 +203,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		65519DF02B760889001A6494 /* Tombola */ = {
+		65519DF02B760889001A6494 /* Frenzy */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Tombola" */;
+			buildConfigurationList = 65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Frenzy" */;
 			buildPhases = (
 				65519DED2B760889001A6494 /* Sources */,
 				65519DEE2B760889001A6494 /* Frameworks */,
@@ -208,7 +215,7 @@
 			);
 			dependencies = (
 			);
-			name = Tombola;
+			name = Frenzy;
 			packageProductDependencies = (
 				65FBFB122B76D84500E72FBA /* MIDIKit */,
 				65FBFB142B76D84500E72FBA /* MIDIKitControlSurfaces */,
@@ -217,12 +224,12 @@
 				65FBFB1A2B76D84500E72FBA /* MIDIKitSMF */,
 			);
 			productName = Tombola;
-			productReference = 65519DF12B760889001A6494 /* Tombola.app */;
+			productReference = 65519DF12B760889001A6494 /* Frenzy.app */;
 			productType = "com.apple.product-type.application";
 		};
-		65519E002B76088B001A6494 /* TombolaTests */ = {
+		65519E002B76088B001A6494 /* FrenzyTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaTests" */;
+			buildConfigurationList = 65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "FrenzyTests" */;
 			buildPhases = (
 				65519DFD2B76088B001A6494 /* Sources */,
 				65519DFE2B76088B001A6494 /* Frameworks */,
@@ -233,14 +240,14 @@
 			dependencies = (
 				65519E032B76088B001A6494 /* PBXTargetDependency */,
 			);
-			name = TombolaTests;
+			name = FrenzyTests;
 			productName = TombolaTests;
-			productReference = 65519E012B76088B001A6494 /* TombolaTests.xctest */;
+			productReference = 65519E012B76088B001A6494 /* FrenzyTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		65519E0A2B76088B001A6494 /* TombolaUITests */ = {
+		65519E0A2B76088B001A6494 /* FrenzyUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaUITests" */;
+			buildConfigurationList = 65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "FrenzyUITests" */;
 			buildPhases = (
 				65519E072B76088B001A6494 /* Sources */,
 				65519E082B76088B001A6494 /* Frameworks */,
@@ -251,9 +258,9 @@
 			dependencies = (
 				65519E0D2B76088B001A6494 /* PBXTargetDependency */,
 			);
-			name = TombolaUITests;
+			name = FrenzyUITests;
 			productName = TombolaUITests;
-			productReference = 65519E0B2B76088B001A6494 /* TombolaUITests.xctest */;
+			productReference = 65519E0B2B76088B001A6494 /* FrenzyUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -295,9 +302,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				65519DF02B760889001A6494 /* Tombola */,
-				65519E002B76088B001A6494 /* TombolaTests */,
-				65519E0A2B76088B001A6494 /* TombolaUITests */,
+				65519DF02B760889001A6494 /* Frenzy */,
+				65519E002B76088B001A6494 /* FrenzyTests */,
+				65519E0A2B76088B001A6494 /* FrenzyUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -333,24 +340,32 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65D084012B7BDA49009238A0 /* TombolaState.swift in Sources */,
 				65D0840E2B7BDC36009238A0 /* SliderView.swift in Sources */,
+				65279BC82B997130006FD15F /* SKPhysicsBody+Extensions.swift in Sources */,
 				65D084082B7BDAAB009238A0 /* NoteDot.swift in Sources */,
 				65D0840A2B7BDBF3009238A0 /* NoteIndicatorView.swift in Sources */,
+				65279BCA2B997952006FD15F /* ControlsView.swift in Sources */,
 				659E98622B8091C200386240 /* AboutView.swift in Sources */,
+				65F510AE2B958A1500AD6CE0 /* TutorialView.swift in Sources */,
+				65279BC62B99711D006FD15F /* PhysicsCategory.swift in Sources */,
+				65279BC32B996CC7006FD15F /* Set+Extensions.swift in Sources */,
 				65D084062B7BDA8D009238A0 /* Array+Extensions.swift in Sources */,
+				65279BBF2B996B41006FD15F /* ToneGenerator.swift in Sources */,
 				656841FB2B7C318E00AB93D5 /* SettingsView.swift in Sources */,
 				65FBFB102B76D82800E72FBA /* MIDIHelper.swift in Sources */,
 				659E98602B808CE000386240 /* MidiCCTableView.swift in Sources */,
+				65279BCC2B99799C006FD15F /* SlidingKeyboardView.swift in Sources */,
 				65D084102B7BDC84009238A0 /* DynamicStack.swift in Sources */,
 				65D0840C2B7BDC18009238A0 /* GravityView.swift in Sources */,
 				65519E212B760906001A6494 /* GameScene.swift in Sources */,
 				65519DF72B760889001A6494 /* ContentView.swift in Sources */,
-				65519DF52B760889001A6494 /* TombolaApp.swift in Sources */,
+				65519DF52B760889001A6494 /* FrenzyApp.swift in Sources */,
+				65279BCE2B9979B8006FD15F /* FrenzyView.swift in Sources */,
 				656841F92B7C318200AB93D5 /* SpawnPositionView.swift in Sources */,
 				65D084122B7BDCA6009238A0 /* Shake.swift in Sources */,
 				653B75542B76B86D00247C3E /* PianoView.swift in Sources */,
 				65D084042B7BDA79009238A0 /* Math.swift in Sources */,
+				65279BC12B996C14006FD15F /* CollisionSensitivity.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -358,7 +373,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65519E062B76088B001A6494 /* TombolaTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -366,8 +380,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				65519E102B76088B001A6494 /* TombolaUITests.swift in Sources */,
-				65519E122B76088B001A6494 /* TombolaUITestsLaunchTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -376,12 +388,12 @@
 /* Begin PBXTargetDependency section */
 		65519E032B76088B001A6494 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 65519DF02B760889001A6494 /* Tombola */;
+			target = 65519DF02B760889001A6494 /* Frenzy */;
 			targetProxy = 65519E022B76088B001A6494 /* PBXContainerItemProxy */;
 		};
 		65519E0D2B76088B001A6494 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 65519DF02B760889001A6494 /* Tombola */;
+			target = 65519DF02B760889001A6494 /* Frenzy */;
 			targetProxy = 65519E0C2B76088B001A6494 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -514,7 +526,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Frenzy/Preview Content\"";
 				DEVELOPMENT_TEAM = 6W3D273VP2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -540,7 +552,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
 		};
@@ -552,7 +564,7 @@
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_ASSET_PATHS = "\"Tombola/Preview Content\"";
+				DEVELOPMENT_ASSET_PATHS = "\"Frenzy/Preview Content\"";
 				DEVELOPMENT_TEAM = 6W3D273VP2;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
@@ -578,7 +590,7 @@
 				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
+				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
 		};
@@ -670,7 +682,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Tombola" */ = {
+		65519E152B76088B001A6494 /* Build configuration list for PBXNativeTarget "Frenzy" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				65519E162B76088B001A6494 /* Debug */,
@@ -679,7 +691,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaTests" */ = {
+		65519E182B76088B001A6494 /* Build configuration list for PBXNativeTarget "FrenzyTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				65519E192B76088B001A6494 /* Debug */,
@@ -688,7 +700,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "TombolaUITests" */ = {
+		65519E1B2B76088B001A6494 /* Build configuration list for PBXNativeTarget "FrenzyUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				65519E1C2B76088B001A6494 /* Debug */,

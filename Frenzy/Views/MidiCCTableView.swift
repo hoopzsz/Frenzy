@@ -1,6 +1,6 @@
 //
 //  MidiCCTableView.swift
-//  Tombola
+//  Frenzy
 //
 //  Created by Daniel Hooper on 2024-02-17.
 //
@@ -56,9 +56,7 @@ struct MidiCCTableView: View {
                         .bold()
                     let wording = cc.cc == 14 ? "Note length" : cc.rawValue.capitalized
                     Text(wording)
-                        .italic()
-//                    Text("...")
-                    
+                        .italic()                    
                     Spacer()
                 }
             }

@@ -1,6 +1,6 @@
 //
 //  Math.swift
-//  Tombola
+//  Frenzy
 //
 //  Created by Daniel Hooper on 2024-02-13.
 //
@@ -22,14 +22,14 @@ func degreesToRadians(degrees: Double) -> Double {
     degrees * Double.pi / 180.0
 }
 
-// Function to rotate a point by a given angle (in radians) around the origin
+// Rotate a point by a given angle (in radians) around the origin
 func rotatePoint(point: CGPoint, angle: CGFloat) -> CGPoint {
     let rotatedX = point.x * cos(angle) - point.y * sin(angle)
     let rotatedY = point.x * sin(angle) + point.y * cos(angle)
     return CGPoint(x: rotatedX, y: rotatedY)
 }
 
-// Function to rotate two points around their center by a given angle (in radians)
+// Rotates two points around their center by a given angle (in radians)
 func rotatePoints(point1: CGPoint, point2: CGPoint, angle: CGFloat) -> (CGPoint, CGPoint) {
     // Calculate the center point
     let centerX = (point1.x + point2.x) / 2

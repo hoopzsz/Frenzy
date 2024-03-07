@@ -1,9 +1,9 @@
 //
 //  GameScene.swift
-//  Line Square Dot
+//  Frenzy
 //
-//  Created by Daniel Hooper on 2018-09-20.
-//  Copyright © 2018 danielhooper. All rights reserved.
+//  Created by Daniel Hooper on 2024-02-13.
+//  Copyright © 2024 danielhooper. All rights reserved.
 //
 
 import CoreMotion
@@ -33,31 +33,11 @@ final class GameScene: SKScene, ObservableObject {
             }
         }
     }
-    
     @Published var secondaryTintColor: Color = .gray
     
     @Published var tertiaryTintColor: Color = .white
     
-//    var noteCollection: Set<Int> = []
-    var notesToFire: [(Int, Int, CGFloat)] = []
-    var noteFiringTimeWindow = 0.05
-    var previousTime: TimeInterval = .zero
-    
-    let bpm = 120.0
-    
-    var didShake = false {
-        didSet {
-//            print("⚠️ Shake detected: \(didShake)")
-//            noteDots.forEach {
-//                if let physicsBody = $0.physicsBody {
-//                    physicsBody.velocity = CGVector(dx: physicsBody.velocity.dx * -1,
-//                                                    dy: physicsBody.velocity.dy * -1)
-//                }
-//            }
-        }
-    }
-    
-    var isInternalSoundEnabled: Bool = false
+    @Published var isInternalSoundEnabled: Bool = true
     
     @Published var collisionSensitivity: CollisionSensitivity = .medium
     
@@ -66,18 +46,16 @@ final class GameScene: SKScene, ObservableObject {
             setGravity(x: gravityX, y: gravityY)
         }
     }
-    
-    private var gravityYBeforeMotionEnabling = 0.0
-    
     @Published var gravityY: CGFloat = 0.6 {
         didSet {
             setGravity(x: gravityX, y: gravityY)
         }
     }
     
+    private var gravityYBeforeMotionEnabling = 0.0
+
     @Published var isMotionEnabled: Bool = false {
         didSet {
-            print("⚠️ isMotionEnabled didSet: \(isMotionEnabled)")
             if isMotionEnabled {
                 gravityYBeforeMotionEnabling = gravityY
                 // Handled by update method
@@ -87,18 +65,7 @@ final class GameScene: SKScene, ObservableObject {
             }
         }
     }
-    
     @Published var noteLength: CGFloat = 0.5
-    
-    var keyPress: Int? {
-        didSet {
-            if let keyPress = keyPress {
-                makeNoteDot(keyPress)
-            }
-        }
-    }
-    
-    var r: CGFloat = 0
     
     @Published var rotationSpeed: CGFloat = 5.5
     
@@ -127,23 +94,37 @@ final class GameScene: SKScene, ObservableObject {
     
     @Published var spawnPosition: CGPoint = .zero
     
+    private var notesToFire: [(Int, Int, CGFloat)] = []
+    private var noteFiringTimeWindow = 0.05
+    private var previousTime: TimeInterval = .zero
+    
+    var keyPress: Int? {
+        didSet {
+            if let keyPress = keyPress {
+                makeNoteDot(keyPress)
+            }
+        }
+    }
+    
+    private var rotation: CGFloat = 0
+    
     private var tombolaSegments: [SKShapeNode] = []
     
     private let motionManager = CMMotionManager()
     
     private let midiManager = ObservableMIDIManager(
         clientName: "FrenzyMIDIManager",
-        model: "FrenzyApp",
+        model: "Frenzy",
         manufacturer: "Daniel Hooper"
     )
     
-    private let midiHelper = MIDIHelper()
+    private let midiHelper: MIDIHelper = MIDIHelper()
 
     override init() {
         super.init(size: .zero)
 
         scaleMode = .aspectFit
-        backgroundColor = .black
+//        backgroundColor = .cyan
         
         physicsWorld.contactDelegate = self
         physicsWorld.speed = 2.0
@@ -163,6 +144,9 @@ final class GameScene: SKScene, ObservableObject {
                 }
             }
         }
+        
+        // get the audio stuff setup by triggering it once here
+        playPureTone(frequencyInHz: 0, amplitude: 0, durationInMillis: 0, completion: { })
     }
 
     override func didMove(to view: SKView) {
@@ -177,7 +161,7 @@ final class GameScene: SKScene, ObservableObject {
 
         physicsBody?.categoryBitMask = PhysicsCategory.worldBoundary.bitMask
         physicsBody?.contactTestBitMask = PhysicsCategory.dot.bitMask
-        physicsBody = SKPhysicsBody(edgeLoopFrom: view.frame.insetBy(dx: -6.0, dy: -6.0)) // dot radius minus 1
+        physicsBody = SKPhysicsBody(edgeLoopFrom: view.frame.insetBy(dx: -16.0, dy: -16.0)) // dot radius minus 1
 
         makeTombolaSegments()
     }
@@ -191,16 +175,15 @@ final class GameScene: SKScene, ObservableObject {
             previousTime = currentTime
         }
         
-        r += (rotationSpeed - 5) * 0.01 * -1
+        rotation += (rotationSpeed - 5) * 0.01 * -1
         tombolaSegments.forEach {
-            $0.zRotation = r
+            $0.zRotation = rotation
         }
 
         // This allows us to concatenate note firing events that happen very close to eachother
         // which may produce unpleasent sounding results
         if previousTime + noteFiringTimeWindow < currentTime {
             fireMidiEvents()
-//            noteCollection = []
             notesToFire = []
             previousTime = currentTime
         }
@@ -217,14 +200,18 @@ final class GameScene: SKScene, ObservableObject {
 
         super.update(currentTime)
     }
-    
+        
     private func fireMidiEvents() {
         notesToFire.forEach { [weak self] (note, velocity, noteLength) in
             self?.midiHelper.sendNoteOn(UInt7(note), velocity: velocity, noteOffDelay: noteLength)
+            
+            if self?.isInternalSoundEnabled ?? false {
+                let freq = noteNumberToFrequency(note)
+                let dur = cycleDurationInMilliseconds(forFrequency: freq)
+                let v = normalize(value: Double(velocity), min: 0.0, max: 127.0, newMin: 0.0, newMax: 1.0) * 0.5
+                playPureTone(frequencyInHz: freq, amplitude: Float(v), durationInMillis: dur * (500.0 * noteLength), completion: { })
+            }
         }
-//        noteCollection.forEach { [weak self] note in
-//            self?.midiHelper.sendNoteOn(UInt7(note), velocity: 127, noteOffDelay: 0.2)
-//        }
     }
     
     private func receiveMidiCC(_ cc: MIDIEvent.CC) {
@@ -339,12 +326,6 @@ extension GameScene: SKPhysicsContactDelegate {
             guard contact.collisionImpulse > collisionSensitivity.impactThreshold else { return }
             if let noteDotNode = contact.bodyB.node as? NoteDot {
                 notesToFire.append((noteDotNode.noteValue, isVelocityFixed ? 127 : velocity, noteLength))
-//                noteCollection.insert(noteDotNode.noteValue)
-//                if isInternalSoundEnabled {
-//                    let freq = noteNumberToFrequency(noteDotNode.noteValue)
-//                    let dur = cycleDurationInMilliseconds(forFrequency: freq)
-//                    playPureTone(frequencyInHz: freq, amplitude: 1.0, durationInMillis: dur * 30.0, completion: { })
-//                }
             }
         // This is supposed to be case .worldBoundary: but this contact stuff isn't figured out properly
         default:
@@ -357,115 +338,9 @@ extension GameScene: SKPhysicsContactDelegate {
     }
 }
 
-enum PhysicsCategory: CaseIterable {
-    case dot, tombola, worldBoundary
-
-    var bitMask: UInt32 {
-        switch self {
-        case .dot:
-            0x1 << 0
-        case .tombola:
-            0x1 << 1
-        case .worldBoundary:
-            0x1 << 2
-        }
-    }
-}
-
-extension SKPhysicsBody {
-    
-    func categoryOfContact() -> PhysicsCategory? {
-        PhysicsCategory.allCases.first { categoryBitMask & $0.bitMask != 0 }
-    }
-}
 
 import SwiftUI
 
 #Preview {
     ContentView()
-}
-
-//
-//
-//  Swift Pure Tone Generation
-//
-/*
-Copyright (c) 2021 Lee Barney
- Permission is hereby granted, free of charge, to any person obtaining a
- copy of this software and associated documentation files (the "Software"),
- to deal in the Software without restriction, including without limitation the
- rights to use, copy, modify, merge, publish, distribute, sublicense,
- and/or sell copies of the Software, and to permit persons to whom the Software
- is furnished to do so, subject to the following conditions:
- 
- The above copyright notice and this permission notice shall be
- included in all copies or substantial portions of the Software.
- 
- 
- THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED,
- INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
- PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
- HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF
- CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE
- OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-*/
-
-import Foundation
-import AVFoundation
-
-func playPureTone(frequencyInHz: Double, amplitude: Float, durationInMillis: Double, completion: @escaping ()->Void) {
-    //Use a semaphore to block until the tone completes playing
-    let semaphore = DispatchSemaphore(value: 1)
-    //Run async in the background so as not to block the current thread
-    DispatchQueue.global().async {
-        //Build the player and its engine
-        let audioPlayer = AVAudioPlayerNode()
-        let audioEngine = AVAudioEngine()
-        semaphore.wait()//Claim the semphore for blocking
-        audioEngine.attach(audioPlayer)
-        let mixer = audioEngine.mainMixerNode
-        let sampleRateHz = Float(mixer.outputFormat(forBus: 0).sampleRate)
-        
-        guard let format = AVAudioFormat(commonFormat: AVAudioCommonFormat.pcmFormatFloat32, sampleRate: Double(sampleRateHz), channels: AVAudioChannelCount(1), interleaved: false) else {
-            return
-        }
-        // Connect the audio engine to the audio player
-        audioEngine.connect(audioPlayer, to: mixer, format: format)
-        
-        
-        let numberOfSamples = AVAudioFrameCount((Float(durationInMillis) / 1000 * sampleRateHz))
-        //create the appropriatly sized buffer
-        guard let buffer  = AVAudioPCMBuffer(pcmFormat: format, frameCapacity: numberOfSamples) else {
-            return
-        }
-        buffer.frameLength = numberOfSamples
-        //get a pointer to the buffer of floats
-        let channels = UnsafeBufferPointer(start: buffer.floatChannelData, count: Int(format.channelCount))
-        let floats = UnsafeMutableBufferPointer<Float>(start: channels[0], count: Int(numberOfSamples))
-        //calculate the angular frequency
-        let angularFrequency = Float(frequencyInHz * 2) * .pi
-        // Generate and store the sequential samples representing the sine wave of the tone
-        for i in 0 ..< Int(numberOfSamples) {
-            let waveComponent = sinf(Float(i) * angularFrequency / sampleRateHz)
-            floats[i] = waveComponent * amplitude
-        }
-        do {
-            try audioEngine.start()
-        }
-        catch{
-            print("Error: Engine start failure")
-            return
-        }
-
-        // Play the pure tone represented by the buffer
-        audioPlayer.play()
-        audioPlayer.scheduleBuffer(buffer, at: nil, options: .interrupts){
-            DispatchQueue.main.async {
-                completion()
-                semaphore.signal()//Release one claim of the semiphore
-            }
-        }
-        semaphore.wait()//Wait for the semiphore so the function doesn't end before the playing of the tone completes
-        semaphore.signal()//Release the other claim of the semiphore
-    }
 }

@@ -1,6 +1,6 @@
 //
 //  PianoView.swift
-//  Tombola
+//  Frenzy
 //
 //  Created by Daniel Hooper on 2024-02-09.
 //

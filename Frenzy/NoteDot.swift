@@ -1,6 +1,6 @@
 //
 //  NoteDot.swift
-//  Tombola
+//  Frenzy
 //
 //  Created by Daniel Hooper on 2024-02-13.
 //
@@ -32,7 +32,6 @@ final class NoteDot: SKShapeNode {
         physicsBody?.angularDamping = 0
         physicsBody?.allowsRotation = true
         physicsBody?.usesPreciseCollisionDetection = true
-        
         physicsBody?.categoryBitMask = PhysicsCategory.dot.bitMask
         physicsBody?.collisionBitMask = PhysicsCategory.tombola.bitMask
         physicsBody?.contactTestBitMask = PhysicsCategory.tombola.bitMask | PhysicsCategory.worldBoundary.bitMask
