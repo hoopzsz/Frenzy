@@ -14,7 +14,7 @@ struct SlidingKeyboardView: View {
     @Binding var globalTintColor: Color
     @Binding var secondaryTintColor: Color
     
-    let idealHeight: CGFloat //geometry.size.height * 0.25
+    let idealHeight: CGFloat
     
     var body: some View {
         GeometryReader { geometry in

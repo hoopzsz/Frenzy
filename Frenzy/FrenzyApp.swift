@@ -20,5 +20,4 @@ struct FrenzyApp: App {
 
 #Preview {
     ContentView()
-        .tint(.orange)
 }

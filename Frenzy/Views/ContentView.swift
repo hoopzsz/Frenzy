@@ -38,69 +38,70 @@ struct ContentView: View {
                                      tintColor: gameScene.secondaryTintColor)
                         .padding(8.0)
                         if isKeyboardVisible {
+                            let idealHeightRatio = UIDevice.current.userInterfaceIdiom == .pad ? 0.22 : 0.17
                             SlidingKeyboardView(keyboardOffset: $keyboardOffset,
                                                 keyPress: $gameScene.keyPress,
                                                 globalTintColor: $gameScene.globalTintColor,
                                                 secondaryTintColor: $gameScene.secondaryTintColor,
-                                                idealHeight: geometry.size.height * 0.2)
-                            .padding(8.0)
+                                                idealHeight: geometry.size.height * idealHeightRatio)
+                            .padding(.horizontal, 8.0)
                         }
                     }
                 }
             }
             .background(Color.black.ignoresSafeArea())
-        }
-        .tint(gameScene.globalTintColor)
-        .toolbar {
-            ToolbarItemGroup(placement: .topBarTrailing) {
-                HStack {
-                    Button("Accelerometer",
-                           systemImage: gameScene.isMotionEnabled ? "m.square.fill" : "m.square") {
-                        gameScene.isMotionEnabled.toggle()
+            .toolbar {
+                ToolbarItemGroup(placement: .topBarTrailing) {
+                    HStack {
+                        Button("Accelerometer",
+                               systemImage: gameScene.isMotionEnabled ? "m.square.fill" : "m.square") {
+                            gameScene.isMotionEnabled.toggle()
+                        }
+                        Button("Audio",
+                               systemImage: gameScene.isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle") {
+                            gameScene.isInternalSoundEnabled.toggle()
+                        }
+                        Button("Settings",
+                               systemImage: "gearshape.fill") {
+                            presentingSettings.toggle()
+                        }
                     }
-                    Button("Audio",
-                           systemImage: gameScene.isInternalSoundEnabled ? "speaker.wave.2.circle.fill" : "speaker.slash.circle") {
-                        gameScene.isInternalSoundEnabled.toggle()
-                    }
-                    Button("Settings",
-                           systemImage: "gearshape.fill") {
-                        presentingSettings.toggle()
-                    }
-                   .sheet(isPresented: $presentingSettings) {
-                       SettingsView(midiChannelOutput: $gameScene.midiChannelOutput,
-                                    midiChannelInput: $gameScene.midiChannelInput,
-                                    isVelocityFixed: $gameScene.isVelocityFixed,
-                                    globalTintColor: $gameScene.globalTintColor,
-                                    secondaryTintColor: $gameScene.secondaryTintColor,
-                                    isKeyboardVisible: $isKeyboardVisible,
-                                    collisionSensitiviy: $gameScene.collisionSensitivity)
-                   }
                 }
             }
-        }
-        .sheet(isPresented: $presentingTutorial) {
-            TutorialView()
-        }
-        .onAppear {
-            gameScene.backgroundColor = .black
-            
-            let sliderSymbolConfig = UIImage.SymbolConfiguration(scale: .medium)
-            let sliderThumbImage = UIImage(systemName: "circle.fill", withConfiguration: sliderSymbolConfig)?
-                .withRenderingMode(.alwaysTemplate)
-                .withTintColor(.white)
-            
-            UISlider
-                .appearance()
-                .setThumbImage(sliderThumbImage, for: .normal)
-            
-//            UserDefaults.standard.setValue(false, forKey: "hasSeenTutorial")
-
-            let hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
-            
-            if !hasSeenTutorial {
-                UserDefaults.standard.setValue(true, forKey: "hasSeenTutorial")
-                presentingTutorial = true
+            .sheet(isPresented: $presentingSettings) {
+                SettingsView(midiChannelOutput: $gameScene.midiChannelOutput,
+                             midiChannelInput: $gameScene.midiChannelInput,
+                             isVelocityFixed: $gameScene.isVelocityFixed,
+                             globalTintColor: $gameScene.globalTintColor,
+                             secondaryTintColor: $gameScene.secondaryTintColor,
+                             isKeyboardVisible: $isKeyboardVisible,
+                             collisionSensitiviy: $gameScene.collisionSensitivity)
             }
+            .sheet(isPresented: $presentingTutorial) {
+                TutorialView()
+            }
+            .onAppear {
+                gameScene.backgroundColor = .black
+                
+                let sliderSymbolConfig = UIImage.SymbolConfiguration(scale: .medium)
+                let sliderThumbImage = UIImage(systemName: "circle.fill", withConfiguration: sliderSymbolConfig)?
+                    .withRenderingMode(.alwaysTemplate)
+                    .withTintColor(.white)
+                
+                UISlider
+                    .appearance()
+                    .setThumbImage(sliderThumbImage, for: .normal)
+                
+                //            UserDefaults.standard.setValue(false, forKey: "hasSeenTutorial")
+                
+                let hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
+                
+                if !hasSeenTutorial {
+                    UserDefaults.standard.setValue(true, forKey: "hasSeenTutorial")
+                    presentingTutorial = true
+                }
+            }
+            .tint(gameScene.globalTintColor)
         }
     }
 }
