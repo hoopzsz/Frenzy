@@ -11,9 +11,9 @@ struct AboutView: View {
     var body: some View {
         VStack {
             Text("""
-        Frenzy is a MIDI sequencer inspired by the OP-1 Tombola sequencer.
+        Frenzy is a MIDI sequencer that uses objects in a physics environment to generate random patterns of notes.
         
-        This app is not a synthesizer or drum machine, it does not create sounds. It creates MIDI note events to play your synthesizers and drum machines, virtual or hardware.
+        This app is not a synthesizer or drum machine, it does not create sounds. It creates MIDI note events to play your synthesizers and drum machines, virtual or hardware. However, you can enable a tone generator to produce sounds to help you understand and use the app without connecting to other apps or devices.
         """)
             .padding()
 

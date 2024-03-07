@@ -10,6 +10,8 @@ import SwiftUI
 
 struct TutorialView: View {
         
+    @Binding var isPresented: Bool
+
     var body: some View {
         VStack {
             HStack {
@@ -38,7 +40,7 @@ struct TutorialView: View {
             Spacer()
             
             Button(action: {
-                // Action to perform when the button is tapped
+                isPresented = false
             }) {
                 Text("Get Started")
                     .font(.title3)
@@ -88,5 +90,5 @@ struct TutorialHeaderView: View {
 }
 
 #Preview {
-    TutorialView()
+    TutorialView(isPresented: .constant(true))
 }

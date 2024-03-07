@@ -78,7 +78,7 @@ struct ContentView: View {
                              collisionSensitiviy: $gameScene.collisionSensitivity)
             }
             .sheet(isPresented: $presentingTutorial) {
-                TutorialView()
+                TutorialView(isPresented: $presentingTutorial)
             }
             .onAppear {
                 gameScene.backgroundColor = .black
@@ -91,9 +91,7 @@ struct ContentView: View {
                 UISlider
                     .appearance()
                     .setThumbImage(sliderThumbImage, for: .normal)
-                
-                //            UserDefaults.standard.setValue(false, forKey: "hasSeenTutorial")
-                
+                                
                 let hasSeenTutorial = UserDefaults.standard.bool(forKey: "hasSeenTutorial")
                 
                 if !hasSeenTutorial {

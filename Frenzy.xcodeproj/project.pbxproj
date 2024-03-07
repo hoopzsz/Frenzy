@@ -126,9 +126,10 @@
 		65279BC42B996CCE006FD15F /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				65279BC22B996CC7006FD15F /* Set+Extensions.swift */,
-				65279BC72B997130006FD15F /* SKPhysicsBody+Extensions.swift */,
 				65D084052B7BDA8D009238A0 /* Array+Extensions.swift */,
+				65279BC22B996CC7006FD15F /* Set+Extensions.swift */,
+				65D084112B7BDCA6009238A0 /* Shake.swift */,
+				65279BC72B997130006FD15F /* SKPhysicsBody+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -136,9 +137,6 @@
 		65519DE82B760889001A6494 = {
 			isa = PBXGroup;
 			children = (
-				65279BCD2B9979B8006FD15F /* FrenzyView.swift */,
-				65279BCB2B99799C006FD15F /* SlidingKeyboardView.swift */,
-				65279BC92B997952006FD15F /* ControlsView.swift */,
 				65519DF32B760889001A6494 /* Frenzy */,
 				65519DF22B760889001A6494 /* Products */,
 			);
@@ -184,18 +182,20 @@
 		65D084022B7BDA58009238A0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
-				65F510AD2B958A1500AD6CE0 /* TutorialView.swift */,
-				659E985F2B808CE000386240 /* MidiCCTableView.swift */,
-				65519DF62B760889001A6494 /* ContentView.swift */,
-				656841F82B7C318200AB93D5 /* SpawnPositionView.swift */,
-				656841FA2B7C318E00AB93D5 /* SettingsView.swift */,
 				659E98612B8091C200386240 /* AboutView.swift */,
-				65D084112B7BDCA6009238A0 /* Shake.swift */,
+				65519DF62B760889001A6494 /* ContentView.swift */,
+				65279BC92B997952006FD15F /* ControlsView.swift */,
 				65D0840F2B7BDC84009238A0 /* DynamicStack.swift */,
-				65D0840D2B7BDC36009238A0 /* SliderView.swift */,
+				65279BCD2B9979B8006FD15F /* FrenzyView.swift */,
 				65D0840B2B7BDC18009238A0 /* GravityView.swift */,
-				65D084092B7BDBF3009238A0 /* NoteIndicatorView.swift */,
 				653B75532B76B86D00247C3E /* PianoView.swift */,
+				659E985F2B808CE000386240 /* MidiCCTableView.swift */,
+				65D084092B7BDBF3009238A0 /* NoteIndicatorView.swift */,
+				656841FA2B7C318E00AB93D5 /* SettingsView.swift */,
+				65279BCB2B99799C006FD15F /* SlidingKeyboardView.swift */,
+				656841F82B7C318200AB93D5 /* SpawnPositionView.swift */,
+				65D0840D2B7BDC36009238A0 /* SliderView.swift */,
+				65F510AD2B958A1500AD6CE0 /* TutorialView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
